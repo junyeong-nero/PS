@@ -13,6 +13,5 @@ class Solution:
         return temp
 
 if __name__ == '__main__':
-    s = Solution()
-    res = s.addSpaces('helloworld', [5])
+    res = Solution().addSpaces('helloworld', [5])
     print(res)
