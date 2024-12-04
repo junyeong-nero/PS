@@ -4,6 +4,9 @@ import functools
 from typing import List
 from collections import Counter
 
+
+# My solution
+
 class Solution:
     def canMakeSubsequence(self, str1: str, str2: str) -> bool:   
         
@@ -32,6 +35,17 @@ class Solution:
             return False
         
         return dfs(0, 0, 0)
+    
+# Best Solutions
+    
+class Solution:
+    def canMakeSubsequence(self, str1: str, str2: str) -> bool:
+        ans, n, m = 0, len(str1), len(str2)
+        for i in range(n):
+            if ans < m and (ord(str2[ans]) - ord(str1[i])) % 26 <= 1:
+                ans += 1
+        return ans == m
+        
     
         
 if __name__ == '__main__':
