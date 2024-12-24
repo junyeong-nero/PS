@@ -1,46 +1,36 @@
-from collections import deque
 from typing import List
 
 class Solution:
     def minimumDiameterAfterMerge(self, edges1: List[List[int]], edges2: List[List[int]]) -> int:
+        
+        def farthest(G, i):
+            n = len(G)
+            bfs = [i]
+            seen = [0] * n
+            seen[i] = 1
+            res = maxd = -1
+            for i in bfs:
+                for j in G[i]:
+                    if seen[j] == 0:
+                        seen[j] = seen[i] + 1
+                        bfs.append(j)
+                        if seen[j] > maxd:
+                            res = j
+                            maxd = seen[j]
+            return res, maxd - 1
 
-        def help(edges):
-            n = len(edges)
-            d = [[] for _ in range(n + 1)]
-            for u, v in edges:
-                d[u].append(v)
-                d[v].append(u)
+        def diameter(edges):
+            if not edges:
+                return 0, 0, 0
+            n = len(edges) + 1
+            G = [[] for _ in range(n)]
+            for i, j in edges:
+                G[i].append(j)
+                G[j].append(i)
+            v1, _ = farthest(G, 0)
+            v2, d = farthest(G, v1)
+            return d, v1, v2
 
-            leaves = [i for i in range(n + 1) if len(d[i]) == 1]
-
-            q = deque(leaves)
-            level = 0
-            visited = set()
-            arr = []
-            while q:
-                n = len(q)
-                for _ in range(n):
-                    tar = q.popleft()
-                    visited.add(tar)
-
-                    check = False
-                    for nei in d[tar]:
-                        if nei in visited:
-                            continue
-                        q.append(nei)
-                        check = True
-                    if check:
-                        arr.append(level + 1)
-                
-                level += 1
-            
-            return level
-
-        if not edges1 and not edges2:
-            return 1
-        if not edges1:
-            return help(edges2)
-        if not edges2:
-            return help(edges1)
-        a, b = help(edges1), help(edges2)
-        return a + b - 1
+        d1, _, _ = diameter(edges1)
+        d2, _, _ = diameter(edges2)
+        return max(d1, d2, (d1 + 1) // 2 + (d2 + 1) // 2 + 1)
