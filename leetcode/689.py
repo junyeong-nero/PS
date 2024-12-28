@@ -1,36 +1,44 @@
-from collections import deque
-from typing import List
-
 class Solution:
-    def maxSumOfThreeSubarrays(self, nums: List[int], k: int) -> List[int]:
+    def maxSumOfThreeSubarrays(self, nums, k):
         n = len(nums)
+        maxsum = 0
+        
+        # Prefix sum array
+        sum = [0] * (n + 1)
+        for i in range(n):
+            sum[i + 1] = sum[i] + nums[i]
+        
+        # Arrays to store the starting index of left and right max sum intervals
+        posLeft = [0] * n
+        posRight = [0] * n
+        ans = [0] * 3
 
-        # Calculate the sum of each subarray of length k
-        temp = sum(nums[:k])
-        arr = [temp]
-        for i in range(n - k):
-            temp = temp - nums[i] + nums[i + k]
-            arr.append(temp)
+        # DP for starting index of the left max sum interval
+        tot = sum[k] - sum[0]
+        for i in range(k, n):
+            if sum[i + 1] - sum[i + 1 - k] > tot:
+                posLeft[i] = i + 1 - k
+                tot = sum[i + 1] - sum[i + 1 - k]
+            else:
+                posLeft[i] = posLeft[i - 1]
 
-        m = len(arr)
-        res, his = deque(), deque()
-        res_v, his_v = 0, 0
+        # DP for starting index of the right max sum interval
+        posRight[n - k] = n - k
+        tot = sum[n] - sum[n - k]
+        for i in range(n - k - 1, -1, -1):
+            if sum[i + k] - sum[i] >= tot:
+                posRight[i] = i
+                tot = sum[i + k] - sum[i]
+            else:
+                posRight[i] = posRight[i + 1]
 
-        # Depth-first search to find the maximum sum of three subarrays
-        def dfs(idx):
-            nonlocal his, his_v, res, res_v
-            if len(his) >= 3:
-                if his_v > res_v:
-                    res = his.copy()
-                    res_v = his_v
-                return
+        # Test all possible middle intervals
+        for i in range(k, n - 2 * k + 1):
+            l = posLeft[i - 1]
+            r = posRight[i + k]
+            tot = (sum[i + k] - sum[i]) + (sum[l + k] - sum[l]) + (sum[r + k] - sum[r])
+            if tot > maxsum:
+                maxsum = tot
+                ans[0], ans[1], ans[2] = l, i, r
 
-            for i in range(idx + k, m):
-                his.append(i)
-                his_v += arr[i]
-                dfs(i)
-                his_v -= arr[i]
-                his.pop()
-
-        dfs(-k)
-        return list(res)
+        return ans
