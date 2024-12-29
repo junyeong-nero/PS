@@ -6,25 +6,25 @@ from bisect import bisect_right
 class Solution:
     def numWays(self, words: List[str], target: str) -> int:
         n, MOD = len(target), 10**9 + 7
-        d = defaultdict(list)
+        d = defaultdict(dict)
 
         for word in words:
             for i, c in enumerate(word):
-                d[c].append(i)
-        
-        for key in d.keys():
-            d[key] = sorted(d[key])
+                if i not in d[c]:
+                    d[c][i] = 0
+                d[c][i] += 1
+        # print(d)
 
         @cache
         def dfs(index, k):
             if index == n:
                 return 1
-            
             temp = 0
-            arr = d[target[index]]
-            start = bisect_right(arr, k)
-            for i in range(start, len(arr)):
-                temp += dfs(index + 1, arr[i])
+            c = target[index]
+            for i in d[c].keys():
+                if i <= k:
+                    continue
+                temp += d[c][i] * dfs(index + 1, i)
             temp = temp % MOD
             return temp
 
