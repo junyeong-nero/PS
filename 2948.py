@@ -1,27 +1,38 @@
+from typing import List
+
 class Solution:
-    def lexicographicallySmallestArray(self, nums: List[int], limit: int) -> List[int]:
-        n = len(nums)
-        sort = sorted(nums)
-        res = []
+    def lexicographicallySmallestArray(self, a: List[int], k: int) -> List[int]:
+        """
+        Rearranges the array 'a' to be lexicographically smallest by swapping elements 
+        within groups where the difference between consecutive elements' original values 
+        is less than or equal to 'k'.
 
-        @cache
-        def dfs(index):
-            if index == n:
-                return True
+        Args:
+            a: The input list of integers.
+            k: The maximum allowed difference for grouping elements.
 
-            temp = False
-            for i in range(n):
-                if sort[i] == -1 or abs(sort[i] - nums[index]) > limit:
-                    continue
-                
-                origin = sort[i]
-                sort[i] = -1
-                if dfs(index + 1):
-                    temp = True
-                    res.append(origin)
-                    break
-                sort[i] = origin
-            return temp
+        Returns:
+            The lexicographically smallest array achievable through allowed swaps.
+        """
 
-        dfs(0)
-        return res[::-1]
+        n = len(a)
+        indexed_a = sorted([(val, idx) for idx, val in enumerate(a)], key=lambda x: x[0])
+
+        groups = []
+        current_group = [indexed_a[0]]
+
+        for i in range(1, n):
+            if indexed_a[i][0] - indexed_a[i - 1][0] <= k:
+                current_group.append(indexed_a[i])
+            else:
+                groups.append(current_group)
+                current_group = [indexed_a[i]]
+        groups.append(current_group)
+
+        for group in groups:
+            indices = [idx for _, idx in group]
+            indices.sort()
+            for i, (val, _) in enumerate(group):
+                a[indices[i]] = val
+
+        return a
