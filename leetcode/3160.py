@@ -1,12 +1,12 @@
 class Solution:
     def queryResults(self, limit: int, queries: List[List[int]]) -> List[int]:
-        arr = [0] * (limit + 1)
+        arr = {}
         counter = Counter()
 
         res = []
         for query in queries:
             a, b = query[0], query[1]
-            if arr[a] > 0:
+            if a in arr:
                 counter[arr[a]] -= 1
                 if counter[arr[a]] == 0:
                     del counter[arr[a]]
