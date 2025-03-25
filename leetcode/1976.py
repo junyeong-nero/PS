@@ -2,38 +2,33 @@ class Solution:
     def countPaths(self, n: int, roads: List[List[int]]) -> int:
         MOD = 10 ** 9 + 7
 
-        d = defaultdict(dict)
+        graph = defaultdict(list)
         for u, v, time in roads:
-            d[u][v] = time
-            d[v][u] = time
+            graph[u].append((time, v))
+            graph[v].append((time, u))
         # print(d)
 
-        dp = [[(float('inf'), 0)] * n for _ in range(n)]
-        for i in range(n):
-            dp[i][i] = (0, 1)
+        dist = [float('inf')] * n
+        dist[0] = 0
 
-        for u, v, time in roads:    
-            dp[u][v] = (time, 1)
-            dp[v][u] = (time, 1)
+        ways = [0] * n
+        ways[0] = 1
 
-        def dfs(i, j):
-            if dp[i][j] != (float('inf'), 0):
-                return dp[i][j]
-
-            min_time, min_count = float('inf'), 0
-            for k in range(n):
-                a_time, a_count = dfs(i, k)
-                b_time, b_count = dfs(k, j)
-                time = a_time + b_time
-                count = a_count * b_count
-                if time < min_time:
-                    min_time = time
-                    min_count = count
-
-            dp[i][j] = (min_time, min_count)
-            return dp[i][j]
+        q = []
+        heappush(q, (0, 0))
         
-        return dfs(0, n - 1)
+        while q:
+            cur_time, node = heappop(q)
+            for time, nei in graph[node]:
+                new_time = cur_time + time
+                if new_time < dist[nei]:
+                    dist[nei] = new_time
+                    ways[nei] = ways[node]
+                    heappush(q, (new_time, nei))
+                elif new_time == dist[nei]:
+                    ways[nei] = (ways[nei] + ways[node]) % MOD
+        
+        return ways[n - 1]
 
             
             
