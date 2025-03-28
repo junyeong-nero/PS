@@ -2,18 +2,15 @@ class Solution:
     def maxPoints(self, grid: List[List[int]], queries: List[int]) -> List[int]:
         m, n = len(grid), len(grid[0])
         # queries[i] > current -> move
-        
-        def func(query):
-            if grid[0][0] >= query:
-                return 0
 
-            area = 0
-            visited = {(0, 0)}
-            q = deque([(0, 0)])
+    
+        visited = {(0, 0)}
+
+        def func(query):
+            nonlocal visited
+            q = deque(visited)
             while q:
                 x, y = q.popleft()
-                area += 1
-
                 dirs = [1, 0, -1, 0, 1]
                 for i in range(4):
                     nx = x + dirs[i]
@@ -26,8 +23,13 @@ class Solution:
                     visited.add((nx, ny))
                     q.append((nx, ny))
 
-            return area
+            return len(visited)
         
-        return [func(query) for query in queries]
+        d = dict()
+        for query in sorted(set(queries)):
+            temp = 0 if grid[0][0] >= query else func(query)
+            d[query] = temp
+        
+        return [d[query] for query in queries]
 
                     
