@@ -4,15 +4,21 @@ class Solution:
         def avg(arr):
             return sum(arr) / len(arr)
 
-        def func(cur, k):
+        n = len(nums)
+        d = dict()
+
+        def func(index, k):
+            if (index, k) in d:
+                return d[(index, k)]
             if k == 1:
-                return avg(cur)
+                return avg(nums[index:])
             res = 0
-            for i in range(1, len(cur)):
-                prefix = cur[:i]
-                res = max(res, avg(prefix) + func(cur[i:], k - 1))
+            for i in range(index + 1, n):
+                prefix = nums[index:i]
+                res = max(res, avg(prefix) + func(i, k - 1))
             
+            d[(index, k)] = res
             return res
         
-        return func(nums, k)
+        return func(0, k)
             
