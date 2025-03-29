@@ -5,16 +5,20 @@ class Solution:
         MOD = 10 ** 9 + 7
 
         def prime_score(num):
+            score = 0
             i = 2
-            primes = set()
-            while num > 1:
-                while num % i == 0:
-                    num /= i
-                    primes.add(i)
+            while i * i <= num:
+                if num % i == 0:
+                    score += 1
+                    while num % i == 0:
+                        num //= i
                 i += 1
-            return len(primes)
+            if num > 1:
+                score += 1
+            return score
 
-        scores = [prime_score(x) for x in nums]
+        d = {x: prime_score(x) for x in set(nums)} 
+        scores = [d[x] for x in nums]
         arr = sorted([(num, idx) for idx, num in enumerate(nums)], reverse=True)
 
         # print(scores)
@@ -28,20 +32,16 @@ class Solution:
                 break
             num, index = arr[i]
 
-            x = index
-            y = index
+            x = y = index
             while x - 1 >= 0 and scores[x - 1] < scores[index]:
                 x -= 1
             while y + 1 < n and scores[y + 1] <= scores[index]:
                 y += 1
 
-            # scores[index] = float('inf')
             count = min(k, (index - x + 1) * (y - index + 1))
-            # print(num, count)
             res = (res * num ** count) % MOD
 
             i += 1
             k -= count
-
 
         return res
