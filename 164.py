@@ -1,22 +1,16 @@
 class Solution:
-    def maximumGap(self, nums: List[int]) -> int:
-        n = len(nums)
-        if n < 2:
-            return 0
+    def maximumGap(self, nums):
+        lo, hi, n = min(nums), max(nums), len(nums)
+        if n <= 2 or hi == lo:
+            return hi - lo
 
-        res = 0
-        d = deque([nums[0]])
-        for i in range(1, n):
-            num = nums[i]
-            if num > d[-1]:
-                d.append(num)
-            else:
-                d.appendleft(num)
-        print(d)
+        B = defaultdict(list)
+        for num in nums:
+            ind = n - 2 if num == hi else (num - lo) * (n - 1) // (hi - lo)
+            B[ind].append(num)
+        # print(B)
 
-        res = 0
-        for i in range(n - 1):
-            diff = d[i + 1] - d[i]
-            res = max(res, diff)
+        cands = [[min(B[i]), max(B[i])] for i in range(n - 1) if B[i]]
+        # print(cands)
 
-        return res
+        return max(y[0] - x[1] for x, y in zip(cands, cands[1:]))
