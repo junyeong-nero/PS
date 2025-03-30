@@ -1,33 +1,20 @@
 class Solution:
     def maxProfit(self, k: int, prices: List[int]) -> int:
-        
         n = len(prices)
+        if not prices or k == 0:
+            return 0
 
-        benefit = defaultdict(list)
-        for i in range(1, n):
-            for j in range(i):
-                value = prices[i] - prices[j]
-                if value > 0:
-                    benefit[j].append((i, value))
-        # print(benefit)
+        # If k is large enough, use unlimited transactions strategy
+        if k >= n // 2:
+            return sum(max(prices[i + 1] - prices[i], 0) for i in range(n - 1))
 
-        d = dict()
+        # DP table
+        dp = [[0] * n for _ in range(k + 1)]
 
-        @cache
-        def func(cur, cost, count):
-            if (cur, cost, count) in d:
-                return d[(cur, cost, count)]
-            
-            if count == 0:
-                return cost
-            res = cost
-            for start, arr in benefit.items():
-                if start <= cur:
-                    continue
-                for end, value in arr:
-                    res = max(res, func(end, cost + value, count - 1))
-            
-            d[(cur, cost, count)] = res
-            return res
+        for i in range(1, k + 1):
+            maxDiff = -prices[0]  # Maximum of (dp[i-1][m] - prices[m])
+            for j in range(1, n):
+                dp[i][j] = max(dp[i][j - 1], prices[j] + maxDiff)
+                maxDiff = max(maxDiff, dp[i - 1][j] - prices[j])
 
-        return func(-1, 0, k)
+        return dp[k][n - 1]
