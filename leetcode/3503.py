@@ -1,48 +1,22 @@
- class Solution:
+class Solution:
     def longestPalindrome(self, s: str, t: str) -> int:
-        
-        res = 1
-        m, n = len(s), len(t)
+        def expand_around_center(s: str, left: int, right: int) -> int:
+            while left >= 0 and right < len(s) and s[left] == s[right]:
+                left -= 1
+                right += 1
+            return right - left - 1  
 
-        for x in range(1, m + 1):
-            for y in range(x):
-                temp = s[y:x]
-                if temp == temp[::-1]:
-                    res = max(res, len(temp))
-            
-        for x in range(1, n + 1):
-            for y in range(x):
-                temp = t[y:x]
-                if temp == temp[::-1]:
-                    res = max(res, len(temp))
+        max_length = 0
+        n, m = len(s), len(t)
 
-        i, j = 0, 1
-        while i < j and j <= m:
-            target = s[i:j][::-1]
-            index = t.find(target)
-            print(target, index)
-            if index != -1:
-                parity = 0
+       
+        for i in range(n + 1):  
+            for j in range(m + 1): 
+                combined = s[:i] + t[j:] 
 
-                p = index - 1
-                while p >= 0:
-                    temp = t[p:index]
-                    if temp == temp[::-1]:
-                        parity = max(parity, len(temp))
-                    p -= 1
+                for center in range(len(combined)):
+                    len1 = expand_around_center(combined, center, center)  
+                    len2 = expand_around_center(combined, center, center + 1)
+                    max_length = max(max_length, len1, len2)
 
-                p = j + 1
-                while p <= m:
-                    temp = s[j:p]
-                    if temp == temp[::-1]:
-                        parity = max(parity, len(temp))
-                    p += 1
-
-                print(target, parity)
-                res = max(res, (j - i) * 2 + parity)
-                j += 1
-            else:
-                i += 1
-                j = i + 1
-
-        return res
+        return max_length
