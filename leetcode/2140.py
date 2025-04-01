@@ -2,21 +2,10 @@ class Solution:
     def mostPoints(self, questions: List[List[int]]) -> int:
         
         n = len(questions)
-        dp = dict()
+        dp = [0] * (n + 1)
+        for i in range(n - 1, -1, -1):
+            p, b = questions[i]
+            nextQuestion = min(n, i + b + 1)
+            dp[i] = max(dp[i + 1], p + dp[nextQuestion])
 
-        @cache
-        def func(cur):
-            if cur in dp:
-                return dp[cur]
-            if cur >= n:
-                return 0
-                
-            res = 0
-            for i in range(cur, n):
-                point, brain = questions[i]
-                res = max(res, point + func(i + brain + 1))
-
-            dp[cur] = res
-            return res
-
-        return func(0)
+        return dp[0]
