@@ -1,10 +1,10 @@
 class Solution:
     def maximumTripletValue(self, nums: List[int]) -> int:
         n = len(nums)
-        res = 0
-        for i in range(n):
-            for j in range(i + 1, n):
-                for k in range(j + 1, n):
-                    res = max(res, (nums[i] - nums[j]) * nums[k])
+        res, max_distance, max_value = 0, 0, 0
+        for num in nums:
+            res = max(res, max_distance * num)
+            max_distance = max(max_distance, max_value - num)
+            max_value = max(num, max_value)
         
         return res
