@@ -1,16 +1,18 @@
 class Solution:
     def largestDivisibleSubset(self, nums: List[int]) -> List[int]:
+        nums.sort()
         
         n = len(nums)
-        nums.sort()
-        res = []
+        d = defaultdict(list)
 
-        for i in range(n):
-            arr = [nums[i]]
-            for j in range(i + 1, n):
-                if nums[j] % arr[-1] == 0:
-                    arr.append(nums[j])
-            if len(arr) > len(res):
-                res = arr
+        for num in nums:
+            temp = []
+            # fine longest subset ends with nums
+            for key, value in d.items():
+                if num % key == 0 and len(temp) < len(value):
+                    temp = value[:]
+            temp.append(num)
+            d[num] = temp
 
-        return res
+        ans = max(d.values(), key=len)
+        return ans
