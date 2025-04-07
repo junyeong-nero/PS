@@ -1,25 +1,15 @@
 class Solution:
     def canPartition(self, nums: List[int]) -> bool:
-        n = len(nums)
-        total = sum(nums)
-        if total % 2 == 1:
+        totalSum = sum(nums)
+        if totalSum % 2 != 0:
             return False
 
-        @cache
-        def func(index, target):
-            if target == 0:
-                return True
-            if target < 0:
-                return False
+        target = totalSum // 2
+        dp = [False] * (target + 1)
+        dp[0] = True  # Base case
 
-            for i in range(index, n):
-                if nums[i] == 0:
-                    continue
-                temp, nums[i] = nums[i], 0
-                if func(index + 1, target - temp):
-                    return True
-                nums[i] = temp
+        for num in nums:
+            for j in range(target, num - 1, -1):  # Traverse backwards
+                dp[j] = dp[j] or dp[j - num]
 
-            return False
-        
-        return func(0, total // 2)
+        return dp[target]
