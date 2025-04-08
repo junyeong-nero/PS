@@ -1,13 +1,10 @@
 class Solution:
     def minimumOperations(self, nums: List[int]) -> int:
-        counter = Counter(nums)
+        counter = Counter()
         n = len(nums)
-
-        res = 0
-        for i in range(0, n, 3):
-            if set(counter.values()) == {1}:
-                return res
-            counter -= Counter(nums[i:min(n, i + 3)])
-            res += 1
+        for i in range(n - 1, -1, -1):
+            counter[nums[i]] += 1
+            if counter[nums[i]] == 2:
+                return math.ceil((i + 1) / 3)
         
-        return res
+        return 0
