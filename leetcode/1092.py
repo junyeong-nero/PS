@@ -1,31 +1,27 @@
 class Solution:
     def shortestCommonSupersequence(self, str1: str, str2: str) -> str:
-        
-        s1 = max(str1, str2, key = lambda x: len(x))
-        s2 = min(str1, str2, key = lambda x: len(x))
+        # Base case: both strings are empty
+        if not str1 and not str2:
+            return ""
 
-        # check subsequences
-        def check(s1, s2):
-            n1, n2 = len(s1), len(s2)
-            i = j = 0
-            while i < n1 and j < n2:
-                if s1[i] == s2[j]:
-                    i += 1
-                    j += 1
-                else:
-                    i += 1
-            return s1 + s2[j:]
+        # Base case: one string is empty, append the other string
+        if not str1:
+            return str2
+        if not str2:
+            return str1
 
-        n2 = len(s2)
-        res = s1 + s2
+        # If the first characters match, include it in the supersequence
+        if str1[0] == str2[0]:
+            return str1[0] + self.shortestCommonSupersequence(
+                str1[1:], str2[1:]
+            )
+        else:
+            # Try both options: picking from str1 or str2, and choose the shorter one
+            pick_str1 = str1[0] + self.shortestCommonSupersequence(
+                str1[1:], str2
+            )
+            pick_str2 = str2[0] + self.shortestCommonSupersequence(
+                str1, str2[1:]
+            )
 
-        for i in range(n2):
-            for j in range(n2, i, -1):
-                s2_ = s2[i:j]
-                temp = s2[:i] + check(s1, s2_) + s2[j:]
-                print(s2_, temp)
-                if len(temp) < len(res):
-                    res = temp
-
-        
-        return res
+            return pick_str1 if len(pick_str1) < len(pick_str2) else pick_str2
