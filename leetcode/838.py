@@ -1,46 +1,40 @@
 class Solution:
     def pushDominoes(self, dominoes: str) -> str:
-        
-        prefix_right = [0]
-        prefix_left = [0]
+        n = len(dominoes)
+        arr = [0] * n
 
-        num = 0
-        for domino in dominoes:
-            if domino == "L":
-                num = 0
-            elif domino == "R":
-                num += 1
-            elif domino == "." and num > 0:
-                num += 1
-            prefix_right.append(num)
+        i = 0
+        while i < n:
+            if dominoes[i] == "R":
+                j = i
+                while j < n and dominoes[j] != "L":
+                    arr[j] += 1
+                    j += 1
+                i = j
+            else:
+                i += 1
+        print(arr)
 
-        prefix_right = prefix_right[1:]
+        i = n - 1
+        while i >= 0:
+            if dominoes[i] == "L":
+                j = i
+                while j >= 0 and dominoes[j] != "R":
+                    arr[j] -= 1
+                    j -= 1
+                i = j
+            else:
+                i -= 1
 
-        num = 0
-        for domino in dominoes[::-1]:
-            if domino == "R":
-                num = 0
-            elif domino == "L":
-                num += 1
-            elif domino == "." and num > 0:
-                num += 1
-            prefix_left.append(num)
-
-        prefix_left = prefix_left[1:][::-1]
-
-        print(prefix_right)
-        print(prefix_left)
-
-        n = len(prefix_right)
+        print(arr)
 
         res = ""
-        for i in range(n):
-            diff = prefix_right[i] - prefix_left[i]
-            if diff > 0:
+        for num in arr:
+            if num > 0:
                 res += "R"
-            if diff < 0:
-                res += "L"
-            if diff == 0:
+            if num == 0:
                 res += "."
+            if num < 0:
+                res += "L"
 
         return res
