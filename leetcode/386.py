@@ -1,20 +1,19 @@
 class Solution:
     def lexicalOrder(self, n: int) -> List[int]:
-
-        if n < 10:
-            return list(range(1, n + 1))
+        res = []
+        value = 1
+        for _ in range(n):
+            res.append(value)
+            if value * 10 <= n:
+                value *= 10
+            else:
+                while value % 10 == 9 or value + 1 > n:
+                    value //= 10
+                value += 1
+        return res
+    
+    # [1]
+    # [1, 10]
+    # [1, 10, 11, 12, 13]
+    # [1, 10, 11, 12, 13, 2]
         
-        @cache
-        def dfs(num):
-            if num > n:
-                return []
-
-            temp = []
-            for i in range(10):
-                if num == 0 and i == 0:
-                    continue
-                temp += dfs(num * 10 + i)
-            
-            return [num] + temp
-
-        return dfs(0)[1:]
