@@ -1,31 +1,27 @@
-class Solution:
-    def findKthNumber(self, n: int, k: int) -> int:
-        res = 0
-        # n = 100
-        # k = 55
+class Solution(object):
+    def findKthNumber(self, n, k):
+        curr = 1
+        k -= 1
 
-        his_index = -1
-        his = None
+        while k > 0:
+            step = self._count_steps(n, curr, curr + 1)
+            # If the steps are less than or equal to k, we skip this prefix's subtree
+            if step <= k:
+                # Move to the next prefix and decrease k by the number of steps we skip
+                curr += 1
+                k -= step
+            else:
+                # Move to the next level of the tree and decrement k by 1
+                curr *= 10
+                k -= 1
 
-        def dfs(cur, bound):
-            if cur > bound:
-                return 0
+        return curr
 
-            nonlocal his_index, his
-            his_index += 1
-            if his_index == k:
-                his = cur
-
-            count = 1
-            for i in range(10):
-                if cur == 0 and i == 0:
-                    continue
-                count += dfs(cur * 10 + i, bound)
-
-            return count
-        
-
-        dfs(0, n)
-        print(his_index, his)
-
-        return his
+    # To count how many numbers exist between prefix1 and prefix2
+    def _count_steps(self, n, prefix1, prefix2):
+        steps = 0
+        while prefix1 <= n:
+            steps += min(n + 1, prefix2) - prefix1
+            prefix1 *= 10
+            prefix2 *= 10
+        return steps
