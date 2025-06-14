@@ -1,30 +1,20 @@
+from collections import defaultdict
+
 class Solution:
-    def numberOfBoomerangs(self, points: List[List[int]]) -> int:
-        n = len(points)
+    def numberOfBoomerangs(self, points):
         res = 0
-
-        def dist(point1, point2):
-            return (point1[0] - point2[0]) ** 2 + (point1[1] - point2[1]) ** 2
-
-        # dist(points[i], points[j]) = dist(points[i], points[k])
-        # dist_map = dict()
-        dist_map = defaultdict(list)
-
-        for i in range(n):
-            for j in range(i + 1, n):
-                point1, point2 = points[i], points[j]
-                d = dist(point1, point2)
-
-                dist_map[d].append((i, j))
-                
-        print(dist_map)
-
-        for key, rows in dist_map.items():
-            m = len(rows)
-            for i in range(m):
-                for j in range(i + 1, m):
-                    a, b = rows[i], rows[j]
-                    if len(set(a) | set(b)) == 3:
-                        res += 2
-
+        
+        for i in points:
+            distance_map = defaultdict(int)
+            
+            for j in points:
+                dx = i[0] - j[0]
+                dy = i[1] - j[1]
+                dist_sq = dx * dx + dy * dy
+                distance_map[dist_sq] += 1
+            
+            for count in distance_map.values():
+                if count >= 2:
+                    res += count * (count - 1)
+        
         return res
