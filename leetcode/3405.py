@@ -3,9 +3,9 @@ class Solution:
         MOD = 10 ** 9 + 7
 
         def dfs(cur, size, left):
-            if left < 0:
+            if left < 0 or size > n:
                 return 0
-            if size == n:
+            if size == n and left == 0:
                 return 1
                 
             res = 0
@@ -16,4 +16,3 @@ class Solution:
             return res % MOD
         
         return dfs(0, 0, k)
-                
