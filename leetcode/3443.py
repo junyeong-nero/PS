@@ -3,6 +3,7 @@ class Solution:
         counter = Counter(s)
         n = len(s)
 
+        dirs = [1, 0, -1, 0, 1]
         map_ = {
             "N": 0,
             "S": 2,
@@ -10,21 +11,16 @@ class Solution:
             "E": 3,
         }
 
-        def dfs(x, y, index, left):
-            res = abs(x) + abs(y)
-            if index >= n:
-                return res
-            dirs = [1, 0, -1, 0, 1]
-            i = map_[s[index]]
-            dx, dy = dirs[i], dirs[i + 1]
-            res = max(res, dfs(x + dx, y + dy, index + 1, left))
-            if left > 0:
-                for i in range(4):
-                    dx, dy = dirs[i], dirs[i + 1]
-                    res = max(res, dfs(x + dx, y + dy, index + 1, left - 1))
-            
-            return res
+        res = k
 
-        res = dfs(0, 0, 0, k)
+        x, y = 0, 0
+        for i, c in enumerate(s):
+            dx, dy = dirs[map_[c]], dirs[map_[c] + 1]
+            x, y = x + dx, y + dy
+            flag = (x > 0, y > 0)
+            temp = abs(x) + abs(y) + min(n - i - 1, k)
+            res = max(res, temp)
+
+        # print(res)
         return res
             
