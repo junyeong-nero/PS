@@ -1,36 +1,37 @@
-from collections import deque
+class Solution:
+    def createPalindrome(self, num: int, odd: bool) -> int:
+        x = num
+        if odd:
+            x //= 10
+        while x > 0:
+            num = num * 10 + x % 10
+            x //= 10
+        return num
 
+    def isPalindrome(self, num: int, base: int) -> bool:
+        digits = []
+        while num > 0:
+            digits.append(num % base)
+            num //= base
+        return digits == digits[::-1]
 
-def kMirror(k: int, n: int) -> int:
-
-    def convert(cur, k):
-        if not cur == cur[::-1]:
-            return -1
-        base10 = sum([int(c) * (k**i) for i, c in enumerate(cur)])
-        base10_str = str(base10)
-        return base10 if base10_str == base10_str[::-1] else -1
-
-    def bfs(cur):
-        res = []
-        q = deque([cur])
-        while q:
-            tar = q.popleft()
-            if (num := convert(tar, k)) > 0:
-                print(tar)
-                res.append(num)
-            if len(res) >= n:
-                break
-            for i in range(k):
-                if tar == "" and i == 0:
-                    continue
-                q.append(tar + str(i))
-
-        return res
-
-    res = bfs("")
-    print(res)
-    return sum(res)
-
-
-res = kMirror(7, 17)
-print(res)
+    def kMirror(self, k: int, n: int) -> int:
+        total = 0
+        length = 1
+        while n > 0:
+            for i in range(length, length * 10):
+                if n <= 0:
+                    break
+                p = self.createPalindrome(i, True)
+                if self.isPalindrome(p, k):
+                    total += p
+                    n -= 1
+            for i in range(length, length * 10):
+                if n <= 0:
+                    break
+                p = self.createPalindrome(i, False)
+                if self.isPalindrome(p, k):
+                    total += p
+                    n -= 1
+            length *= 10
+        return total
