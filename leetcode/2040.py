@@ -1,46 +1,27 @@
+from bisect import bisect, bisect_left
+
+
 class Solution:
-    def kthSmallestProduct(self, nums1: List[int], nums2: List[int], k: int) -> int:
-        n1, n2 = len(nums1), len(nums2)
+    def kthSmallestProduct(self, nums1, nums2, k):
+        def check(x):
+            total = 0
+            for n1 in nums1:
+                if n1 > 0:
+                    total += bisect(nums2, x // n1)
+                if n1 < 0:
+                    total += len(nums2) - bisect_left(nums2, ceil(x / n1))
+                if n1 == 0 and x >= 0:
+                    total += len(nums2)
 
-        i, j = bisect_left(nums1, 0), bisect_left(nums2, 0)
-        # print(i, j)
+            return total
 
-        nums1_neg, nums1_pos = nums1[:i], nums1[i:]
-        nums2_neg, nums2_pos = nums2[:j], nums2[j:]
+        beg, end = -(10**10) - 1, 10**10 + 1
 
-        # neg, pos
-        arr = []
-        for neg in nums1_neg:
-            for pos in nums2_pos:
-                arr.append(neg * pos)
-        for neg in nums2_neg:
-            for pos in nums1_pos:
-                arr.append(neg * pos)
+        while beg + 1 < end:
+            mid = (beg + end) // 2
+            if check(mid) >= k:
+                end = mid
+            else:
+                beg = mid
 
-        arr = sorted(arr)
-        # print(arr)
-        if len(arr) >= k:
-            # print("here!")
-            return arr[k - 1]
-        else:
-            k -= len(arr)
-
-        # neg, neg
-        arr = []
-        for neg in nums1_neg:
-            for pos in nums2_neg:
-                arr.append(neg * pos)
-        # pos, pos
-        for neg in nums2_pos:
-            for pos in nums1_pos:
-                arr.append(neg * pos)
-
-        arr = sorted(arr)
-        # print(arr)
-        if len(arr) >= k:
-            # print("here2!")
-            return arr[k - 1]
-        else:
-            k -= len(arr)
-
-        return
+        return beg + 1
