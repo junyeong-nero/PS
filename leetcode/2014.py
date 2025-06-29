@@ -1,39 +1,18 @@
 class Solution:
-    def longestSubsequenceRepeatedK(self, s: str, k: int) -> str:
+    def isSubsequence(self, s, t):
+        t = iter(t)
+        return all(c in t for c in s)
 
-        counter = Counter(s)
-        candidates = [key for key, value in counter.items() if value >= k]
-        # print(candidates)
+    def longestSubsequenceRepeatedK(self, s, k):
+        hot = "".join(el * (freq // k) for el, freq in Counter(s).items())
 
-        s = [c for c in s if c in candidates]
-        # print(s)
-        n = len(s)
+        combs = set()
+        for l in range(len(hot) + 1):
+            for cand in combinations(hot, l):
+                for perm in permutations(cand):
+                    combs.add("".join(perm))
 
-        def check(candidate):
-            x = len(candidate)
-            if x % k != 0:
-                return None
-            a = x // k
-            if candidate[:a] * k == candidate:
-                return candidate[:a]
-            return None
-
-        seq = ""
-
-        def dfs(index, cur=""):
-            if cur:
-                temp = check(cur)
-                nonlocal seq
-                if temp:
-                    if len(seq) < len(temp):
-                        seq = temp
-                    elif len(seq) == len(temp) and temp > seq:
-                        seq = temp
-
-            if index >= n:
-                return
-            dfs(index + 1, cur)
-            dfs(index + 1, cur + s[index])
-
-        dfs(0)
-        return seq
+        combs = sorted(combs, key=lambda x: (len(x), x), reverse=True)
+        for c in combs:
+            if self.isSubsequence(c * k, s):
+                return c
