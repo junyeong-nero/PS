@@ -1,11 +1,13 @@
-class Solution:
-    def isZeroArray(self, nums: List[int], queries: List[List[int]]) -> bool:
-
-        def check(index):
-            return sum([1 for query in queries if query[0] <= index <= query[1]])
-
-        for index, num in enumerate(nums):
-            if check(index) < num:
+class Solution(object):
+    def isZeroArray(self, nums, queries):
+        diff = [0] * (len(nums))
+        for l, r in queries:
+            diff[l] += 1
+            if r + 1 < len(nums):
+                diff[r + 1] -= 1
+        cnt = 0
+        for i in range(len(nums)):
+            cnt += diff[i]
+            if nums[i] > cnt:
                 return False
-
         return True
