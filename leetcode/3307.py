@@ -1,20 +1,13 @@
 class Solution:
-    def kthCharacter(self, k: int, operations: List[int]) -> str:
 
-        def func(word):
-            res = ""
-            for char in word:
-                res += "a" if char == "z" else chr(ord(char) + 1)
-            return res
+    def kthCharacter(self, k, operations):
+        mutations = 0
+        # Iterate from log2(k) down to 0
+        # The int(math.log2(k)) handles k=1 correctly (log2(1) = 0)
+        for op in range(int(math.log2(k)), -1, -1):
+            # Check if k is greater than 2 raised to the power of op
+            if k > (1 << op):
+                k -= 1 << op
+                mutations += operations[op]
 
-        word = "a"
-        for op in operations:
-            if op == 0:
-                word = word + word
-            if op == 1:
-                word = word + func(word)
-
-            if len(word) >= k:
-                break
-
-        return word[k - 1]
+        return chr(ord("a") + mutations % 26)
