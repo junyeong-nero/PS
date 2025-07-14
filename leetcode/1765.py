@@ -9,9 +9,9 @@ class Solution:
                     q.append((x, y, 0))
                 elif isWater[x][y] == 0:
                     isWater[x][y] = -1
-        
+
         while q:
-            dirs = [1, 0, -1, 0, 1] 
+            dirs = [1, 0, -1, 0, 1]
             x, y, z = q.popleft()
             for i in range(4):
                 nx, ny, nz = x + dirs[i], y + dirs[i + 1], z + 1
@@ -22,4 +22,3 @@ class Solution:
                     q.append((nx, ny, nz))
 
         return isWater
-                                    

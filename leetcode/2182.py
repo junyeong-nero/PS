@@ -1,12 +1,13 @@
 from collections import Counter
 
+
 class Solution:
     def repeatLimitedString(self, s: str, repeatLimit: int) -> str:
         # Count the frequency of each character
         char_count = Counter(s)
         # Sort characters by their lexicographical order in descending order
         sorted_keys = sorted(char_count.keys(), reverse=True)
-        
+
         result = []
         n = len(sorted_keys)
 
@@ -14,7 +15,7 @@ class Solution:
             key = sorted_keys[i]
             while char_count[key] > repeatLimit:
                 # Find the next available character
-                next_key = ''
+                next_key = ""
                 for j in range(i + 1, n):
                     if char_count[sorted_keys[j]] > 0:
                         next_key = sorted_keys[j]
@@ -40,4 +41,4 @@ class Solution:
         for key in sorted_keys:
             result.append(key * min(char_count[key], repeatLimit))
 
-        return ''.join(result)
+        return "".join(result)

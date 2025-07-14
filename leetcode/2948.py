@@ -1,10 +1,11 @@
 from typing import List
 
+
 class Solution:
     def lexicographicallySmallestArray(self, a: List[int], k: int) -> List[int]:
         """
-        Rearranges the array 'a' to be lexicographically smallest by swapping elements 
-        within groups where the difference between consecutive elements' original values 
+        Rearranges the array 'a' to be lexicographically smallest by swapping elements
+        within groups where the difference between consecutive elements' original values
         is less than or equal to 'k'.
 
         Args:
@@ -16,7 +17,9 @@ class Solution:
         """
 
         n = len(a)
-        indexed_a = sorted([(val, idx) for idx, val in enumerate(a)], key=lambda x: x[0])
+        indexed_a = sorted(
+            [(val, idx) for idx, val in enumerate(a)], key=lambda x: x[0]
+        )
 
         groups = []
         current_group = [indexed_a[0]]

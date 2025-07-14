@@ -1,6 +1,7 @@
 from typing import List
 from heapq import heapify, heappop, heappush
 
+
 class Solution:
     def getFinalState(self, nums: List[int], k: int, multiplier: int) -> List[int]:
         n = len(nums)
@@ -16,4 +17,3 @@ class Solution:
             arr[index] = val
 
         return arr
-        

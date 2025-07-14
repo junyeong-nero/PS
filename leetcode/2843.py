@@ -7,7 +7,7 @@ class Solution:
             n = len(temp)
             if n % 2 == 1:
                 continue
-            if sum(temp[:n // 2]) == sum(temp[n // 2:]):
+            if sum(temp[: n // 2]) == sum(temp[n // 2 :]):
                 res += 1
-        
+
         return res

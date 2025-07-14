@@ -4,6 +4,7 @@ class Solution:
         # print(words)
 
         tree = dict()
+
         def add(tree, word):
             cur = tree
             check = True
@@ -12,11 +13,11 @@ class Solution:
                     check = False
                     break
                 cur = cur[char]
-            
+
             if check:
                 cur[word[-1]] = dict()
                 return len(word)
-            
+
             return 0
 
         res = ""
@@ -24,6 +25,6 @@ class Solution:
             size = add(tree, word)
             if size > len(res):
                 res = word
-        
+
         # print(tree)
         return res

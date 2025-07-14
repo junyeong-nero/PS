@@ -12,8 +12,6 @@ class Solution:
             if index % numRows == 0 or index % numRows == numRows - 1:
                 direction *= -1
             index += direction
-        
+
         # print(d)
         return "".join(["".join(row) for row in d])
-            
-

@@ -1,6 +1,6 @@
 class Solution:
     def pacificAtlantic(self, heights: List[List[int]]) -> List[List[int]]:
-        
+
         m, n = len(heights), len(heights[0])
         po = [[False] * n for _ in range(m)]
         ao = [[False] * n for _ in range(m)]
@@ -13,14 +13,12 @@ class Solution:
             po[i][0] = True
             ao[i][-1] = True
 
-
         for j in range(n):
             po_start.append((0, j))
             ao_start.append((m - 1, j))
             po[0][j] = True
             ao[m - 1][j] = True
 
-        
         def func(start_points, target):
             q = deque(start_points)
             while q:
@@ -41,7 +39,7 @@ class Solution:
 
         func(po_start, po)
         func(ao_start, ao)
-        
+
         # print(po)
         # print(ao)
 

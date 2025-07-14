@@ -19,5 +19,7 @@ class Solution:
         checkCycle = []
         for i in range(v):
             if self.isSafe(i, graph, visited, checkCycle):
-                checkCycle.append(i)  # Add the nodes that are safe (eventual safe nodes) to the result
+                checkCycle.append(
+                    i
+                )  # Add the nodes that are safe (eventual safe nodes) to the result
         return checkCycle

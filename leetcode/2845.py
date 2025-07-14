@@ -1,7 +1,5 @@
 class Solution:
-    def countInterestingSubarrays(
-        self, nums: List[int], modulo: int, k: int
-    ) -> int:
+    def countInterestingSubarrays(self, nums: List[int], modulo: int, k: int) -> int:
         n = len(nums)
         cnt = Counter([0])
         res = 0

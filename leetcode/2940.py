@@ -3,8 +3,11 @@ from bisect import bisect_right
 from operator import itemgetter
 from typing import List
 
+
 class Solution:
-    def leftmostBuildingQueries(self, heights: List[int], queries: List[List[int]]) -> List[int]:
+    def leftmostBuildingQueries(
+        self, heights: List[int], queries: List[List[int]]
+    ) -> List[int]:
         # 결과 리스트 초기화 (queries 크기와 동일, 초기값은 0)
         res = [0] * len(queries)
         # 특정 조건을 만족하는 쿼리의 인덱스를 저장할 리스트
@@ -14,7 +17,7 @@ class Solution:
         for i, q in enumerate(queries):
             # 쿼리를 정렬하여 작은 값을 a, 큰 값을 b로 설정
             a, b = sorted(q)
-            
+
             # a와 b가 같거나 a의 높이가 b의 높이보다 작으면 b를 결과로 저장
             if a == b or heights[a] < heights[b]:
                 res[i] = b

@@ -7,4 +7,4 @@ class Solution:
             else:
                 q.append(char)
 
-        return ''.join(q)
+        return "".join(q)

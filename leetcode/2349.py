@@ -1,8 +1,8 @@
 class NumberContainers:
 
     def __init__(self):
-        self.map = {} # number, heap[index]
-        self.index_to_number = {} # index, number
+        self.map = {}  # number, heap[index]
+        self.index_to_number = {}  # index, number
 
     def change(self, index: int, number: int) -> None:
         if number not in self.map:
@@ -21,7 +21,7 @@ class NumberContainers:
             if self.index_to_number[index] == number:
                 heapq.heappush(heap, index)
                 return index
-            
+
         return -1
 
 

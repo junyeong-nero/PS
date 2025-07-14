@@ -1,6 +1,6 @@
 class Solution:
     def countAndSay(self, n: int) -> str:
-        
+
         def func(s):
             res = ""
             target = ""
@@ -16,7 +16,7 @@ class Solution:
             if count > 0:
                 res += str(count) + target
             return res
-        
+
         res = "1"
         for _ in range(n - 1):
             res = func(res)

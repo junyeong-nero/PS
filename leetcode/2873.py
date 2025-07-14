@@ -6,5 +6,5 @@ class Solution:
             res = max(res, max_distance * num)
             max_distance = max(max_distance, max_value - num)
             max_value = max(num, max_value)
-        
+
         return res

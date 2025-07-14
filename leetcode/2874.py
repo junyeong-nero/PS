@@ -7,7 +7,7 @@ class Solution:
         # max : nums[k]
 
         # min : nums[i]
-        # max : nums[j] > 0 
+        # max : nums[j] > 0
         # min : nums[k] < 0
 
         a = b = nums[0]
@@ -15,7 +15,7 @@ class Solution:
         res = 0
 
         for num in nums[1:]:
-            
+
             res = max(res, c * num)
             res = max(res, d * num)
 

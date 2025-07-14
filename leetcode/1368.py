@@ -6,7 +6,8 @@ class Solution:
         bfs = []
 
         def dfs(x, y):
-            if not (0 <= x < n and 0 <= y < m and dp[x][y] == inf): return
+            if not (0 <= x < n and 0 <= y < m and dp[x][y] == inf):
+                return
             dp[x][y] = k
             bfs.append([x, y])
             dfs(x + dirt[A[x][y] - 1][0], y + dirt[A[x][y] - 1][1])

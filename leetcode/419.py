@@ -15,7 +15,7 @@ class Solution:
                         x, y = nx, ny
                     else:
                         break
-        
+
         count = 0
         for i in range(m):
             for j in range(n):

@@ -1,6 +1,6 @@
 class Solution:
     def pickGifts(self, gifts: List[int], k: int) -> int:
-        
+
         gifts = [-x for x in gifts]
         heapify(gifts)
 

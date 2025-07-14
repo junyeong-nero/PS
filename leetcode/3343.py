@@ -29,18 +29,12 @@ class Solution:
                     min(tot_sum, target), max(0, tot_sum - target) - 1, -1
                 ):
                     res = 0
-                    for j in range(
-                        max(0, cnt[i] - even_cnt), min(cnt[i], odd_cnt) + 1
-                    ):
+                    for j in range(max(0, cnt[i] - even_cnt), min(cnt[i], odd_cnt) + 1):
                         if i * j > curr:
                             break
                         # The current digit is filled with j positions at odd positions, and cnt[i] - j positions at even positions
-                        ways = (
-                            comb(odd_cnt, j) * comb(even_cnt, cnt[i] - j) % MOD
-                        )
-                        res = (
-                            res + ways * f[curr - i * j][odd_cnt - j] % MOD
-                        ) % MOD
+                        ways = comb(odd_cnt, j) * comb(even_cnt, cnt[i] - j) % MOD
+                        res = (res + ways * f[curr - i * j][odd_cnt - j] % MOD) % MOD
                     f[curr][odd_cnt] = res % MOD
 
         return f[target][max_odd]

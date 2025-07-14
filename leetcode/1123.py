@@ -13,7 +13,7 @@ class Solution:
             nonlocal d
             if not cur:
                 return depth
-            
+
             right = func(cur.left, depth + 1)
             left = func(cur.right, depth + 1)
             if right == left:
@@ -22,5 +22,3 @@ class Solution:
 
         max_depth = func(root, 0)
         return d[max_depth]
-
-

@@ -2,12 +2,12 @@ class Solution:
     def maxSumOfThreeSubarrays(self, nums, k):
         n = len(nums)
         maxsum = 0
-        
+
         # Prefix sum array
         sum = [0] * (n + 1)
         for i in range(n):
             sum[i + 1] = sum[i] + nums[i]
-        
+
         # Arrays to store the starting index of left and right max sum intervals
         posLeft = [0] * n
         posRight = [0] * n

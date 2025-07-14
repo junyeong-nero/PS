@@ -1,5 +1,6 @@
 from typing import List
 
+
 class Solution:
     def check(self, nums: List[int]) -> bool:
         """
@@ -11,7 +12,7 @@ class Solution:
         Returns:
             True if the list is a rotated sorted array, False otherwise.
         """
-        
+
         inversions = 0  # Count of non-decreasing transitions
         for i in range(len(nums) - 1):
             if nums[i] > nums[i + 1]:

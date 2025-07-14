@@ -1,6 +1,8 @@
 class Solution:
-    def maximalPathQuality(self, values: List[int], edges: List[List[int]], maxTime: int) -> int:
-        
+    def maximalPathQuality(
+        self, values: List[int], edges: List[List[int]], maxTime: int
+    ) -> int:
+
         graph = defaultdict(list)
         for u, v, time in edges:
             graph[u].append((v, time))
@@ -10,9 +12,9 @@ class Solution:
         n = len(values)
         visited = [False] * n
         visited[0] = True
-        
-        max_cost = -1   
-   
+
+        max_cost = -1
+
         def dfs(cur, time, cost):
             if time > maxTime:
                 return

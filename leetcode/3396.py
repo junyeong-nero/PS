@@ -6,5 +6,5 @@ class Solution:
             counter[nums[i]] += 1
             if counter[nums[i]] == 2:
                 return math.ceil((i + 1) / 3)
-        
+
         return 0

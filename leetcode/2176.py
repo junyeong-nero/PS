@@ -3,7 +3,7 @@ class Solution:
         d = defaultdict(list)
         for idx, num in enumerate(nums):
             d[num].append(idx)
-        
+
         res = 0
         for key, value in d.items():
             n = len(value)
@@ -13,4 +13,3 @@ class Solution:
                         res += 1
 
         return res
-

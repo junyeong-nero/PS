@@ -2,7 +2,7 @@ class Solution:
     def checkLine(self, line: list[str]) -> bool:
         seen = set()
         for c in line:
-            if c != '.':
+            if c != ".":
                 if c in seen:
                     return False
                 seen.add(c)
@@ -13,7 +13,7 @@ class Solution:
         for a in range(3 * i, 3 * (i + 1)):
             for b in range(3 * j, 3 * (j + 1)):
                 c = board[a][b]
-                if c != '.':
+                if c != ".":
                     if c in seen:
                         return False
                     seen.add(c)

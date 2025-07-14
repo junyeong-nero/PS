@@ -1,6 +1,6 @@
 class Solution:
     def removeElement(self, nums: List[int], val: int) -> int:
-        
+
         n = len(nums)
         index, count = 0, 0
         for i in range(n):

@@ -9,9 +9,8 @@ class Solution:
                 res += 1
             q.popleft()
             q.append(nums[i])
-        
+
         if q[0] + q[2] == q[1] / 2:
             res += 1
-        
+
         return res
-            

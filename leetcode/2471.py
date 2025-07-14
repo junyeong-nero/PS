@@ -12,11 +12,11 @@ class Solution:
 
         def count_swap(arr):
             res = 0
-            mp = {x : i for i, x in enumerate(sorted(arr))}
+            mp = {x: i for i, x in enumerate(sorted(arr))}
             visited = [0] * len(arr)
-            for i in range(len(arr)): 
-                cnt = 0 
-                while not visited[i] and i != mp[arr[i]]: 
+            for i in range(len(arr)):
+                cnt = 0
+                while not visited[i] and i != mp[arr[i]]:
                     visited[i] = 1
                     cnt += 1
                     i = mp[arr[i]]
@@ -30,10 +30,11 @@ class Solution:
             for i in range(n):
                 tar = q.popleft()
                 arr.append(tar.val)
-                if tar.left: q.append(tar.left)
-                if tar.right: q.append(tar.right)
+                if tar.left:
+                    q.append(tar.left)
+                if tar.right:
+                    q.append(tar.right)
 
-            res += count_swap(arr )
-        
+            res += count_swap(arr)
+
         return res
-        

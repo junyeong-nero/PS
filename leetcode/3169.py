@@ -4,7 +4,7 @@ class Solution:
         # print(meetings)
 
         last_day = 0
-        result = 0 
+        result = 0
         for meeting in meetings:
             start, end = meeting
             result += max(0, start - last_day - 1)

@@ -3,6 +3,7 @@
 from typing import List
 from bisect import bisect_left, bisect_right
 
+
 class Solution:
     def isArraySpecial(self, nums: List[int], queries: List[List[int]]) -> List[bool]:
         nums = [x % 2 for x in nums]
@@ -18,17 +19,15 @@ class Solution:
 
         def help(query):
             index = bisect_left(res, query[1])
-            t1 = (index < len(res) and query[0] < res[index] and res[index] <= query[1])
+            t1 = index < len(res) and query[0] < res[index] and res[index] <= query[1]
             index = bisect_right(res, query[0])
-            t2 = (index < len(res) and query[0] < res[index] and res[index] <= query[1])
+            t2 = index < len(res) and query[0] < res[index] and res[index] <= query[1]
             return not (t1 or t2)
 
         return [help(q) for q in queries]
-    
+
     # prefix sum version
-    def isArraySpecial(
-        self, nums: List[int], queries: List[List[int]]
-    ) -> List[bool]:
+    def isArraySpecial(self, nums: List[int], queries: List[List[int]]) -> List[bool]:
         ans = [False] * len(queries)
         prefix = [0] * len(nums)
         prefix[0] = 0

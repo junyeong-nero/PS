@@ -1,10 +1,13 @@
 from collections import defaultdict, deque
 from typing import List
 
+
 class Solution:
-    
+
     # TLE at 712/736
-    def maxKDivisibleComponents(self, n: int, edges: List[List[int]], values: List[int], k: int) -> int:
+    def maxKDivisibleComponents(
+        self, n: int, edges: List[List[int]], values: List[int], k: int
+    ) -> int:
 
         g = defaultdict(set)
         for u, v in edges:
@@ -16,7 +19,7 @@ class Solution:
             visited = set()
             res = 0
             while q:
-                
+
                 tar = q.popleft()
                 res += values[tar]
                 visited.add(tar)
@@ -32,7 +35,7 @@ class Solution:
         for u, v in edges:
             g[u].remove(v)
             g[v].remove(u)
-            
+
             a, b = sum_graphs(u), sum_graphs(v)
             if a % k == 0 and b % k == 0:
                 # print(u, v)
@@ -43,8 +46,10 @@ class Solution:
                 g[v].add(u)
 
         return count + 1
-    
-    def maxKDivisibleComponents(self, n: int, edges: List[List[int]], values: List[int], k: int) -> int:
+
+    def maxKDivisibleComponents(
+        self, n: int, edges: List[List[int]], values: List[int], k: int
+    ) -> int:
         g = defaultdict(set)
         for u, v in edges:
             g[u].add(v)
@@ -68,12 +73,13 @@ class Solution:
                 count += 1
 
         return count + 1
-    
-    
-    # TLE at 612/736
-    def maxKDivisibleComponents(self, n: int, edges: List[List[int]], values: List[int], k: int) -> int:
 
-        def _sum(root, visited = set()):
+    # TLE at 612/736
+    def maxKDivisibleComponents(
+        self, n: int, edges: List[List[int]], values: List[int], k: int
+    ) -> int:
+
+        def _sum(root, visited=set()):
             temp = values[root]
             visited.add(root)
             for u, v in edges:
@@ -96,9 +102,9 @@ class Solution:
                     ignore.add(i)
                     temp = max(temp, 1 + dfs(total))
             return temp
-        
+
         return dfs(sum(values)) + 1
-    
+
     def maxKDivisibleComponents(self, n, edges, values, k) -> int:
         if n <= 1:
             return 1

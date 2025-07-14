@@ -4,8 +4,8 @@ class Solution:
         n1, n2 = len(nums1), len(nums2)
         if n2 % 2 == 1:
             for num in nums1:
-                res = res ^ num 
-        if n1 % 2 == 1: 
+                res = res ^ num
+        if n1 % 2 == 1:
             for num in nums2:
-                res = res ^ num 
+                res = res ^ num
         return res

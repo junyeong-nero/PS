@@ -1,6 +1,7 @@
 from collections import Counter
 from typing import List
 
+
 class Solution:
     def wordSubsets(self, words1: List[str], words2: List[str]) -> List[str]:
         counter = Counter()
@@ -8,7 +9,7 @@ class Solution:
             temp = Counter(word)
             for key in temp.keys():
                 counter[key] = max(counter[key], temp[key])
-        
+
         print(counter)
 
         res = []

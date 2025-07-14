@@ -4,7 +4,7 @@ class Solution:
         d = defaultdict(list)
         for i, c in enumerate(s):
             d[c].append(i)
-        
+
         boundary = [(value[0], value[-1]) for key, value in d.items()]
         boundary = sorted(boundary)
 
@@ -17,7 +17,6 @@ class Solution:
                 if cur[1] >= 0:
                     res.append(cur)
                 cur = [bound[0], bound[1]]
-        
+
         res.append(cur)
         return [elem[1] - elem[0] + 1 for elem in res]
-        

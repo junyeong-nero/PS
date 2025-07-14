@@ -2,6 +2,7 @@ from collections import defaultdict
 from typing import List
 from functools import cache
 
+
 class Solution:
     def numWays(self, words: List[str], target: str) -> int:
         n, MOD = len(target), 10**9 + 7
@@ -19,14 +20,14 @@ class Solution:
                 return 1
             if pos >= m:
                 return 0
-            
+
             char = target[index]
             temp = 0
 
             # 현재 열에서 문자를 선택하는 경우
             if char in freq[pos]:
                 temp += freq[pos][char] * dfs(index + 1, pos + 1)
-            
+
             # 현재 열을 건너뛰는 경우
             temp += dfs(index, pos + 1)
 

@@ -7,7 +7,7 @@ class Solution:
         i = 0
         while True:
             if i not in s:
-                return str(bin(i))[2:].rjust(n, '0')
+                return str(bin(i))[2:].rjust(n, "0")
             i += 1
-        
-        return ''
+
+        return ""

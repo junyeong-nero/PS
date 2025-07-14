@@ -1,7 +1,8 @@
 from itertools import deque
 
+
 class Solution:
-    
+
     def continuousSubarrays(self, nums):
         maxQ = deque()
         minQ = deque()
@@ -30,7 +31,7 @@ class Solution:
             res += right - left + 1
 
         return res
-    
+
     def continuousSubarrays(self, nums) -> int:
         n = len(nums)
         i, j = 0, 0
@@ -48,5 +49,5 @@ class Solution:
                     res += 1
                 else:
                     break
-    
+
         return res

@@ -4,5 +4,5 @@ class Solution:
         res = 0
         for val in counter.values():
             temp = val % 2
-            res += (2 if temp == 0 else temp)
+            res += 2 if temp == 0 else temp
         return res

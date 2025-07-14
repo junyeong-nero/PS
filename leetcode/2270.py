@@ -8,5 +8,5 @@ class Solution:
             right -= num
             if left >= right:
                 res += 1
-        
+
         return res

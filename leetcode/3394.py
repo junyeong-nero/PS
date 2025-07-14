@@ -1,6 +1,6 @@
 class Solution:
     def checkValidCuts(self, n: int, rectangles: List[List[int]]) -> bool:
-        
+
         def check_overlap(arr):
             arr = sorted(arr)
             prev = res = -1

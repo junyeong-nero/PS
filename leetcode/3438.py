@@ -7,5 +7,5 @@ class Solution:
                 continue
             if a == str(counter[a]) and b == str(counter[b]):
                 return a + b
-        
+
         return ""

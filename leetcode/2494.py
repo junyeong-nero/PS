@@ -1,6 +1,7 @@
 from collections import defaultdict, deque
 from typing import List
 
+
 class Solution:
     def magnificentSets(self, n: int, edges: List[List[int]]) -> int:
         """
@@ -29,10 +30,12 @@ class Solution:
 
         def union(x, y):
             """Merges the connected components of x and y by setting the root of x's component
-             to point to the root of y's component."""
+            to point to the root of y's component."""
             root_x = find(x)
             root_y = find(y)
-            UF[root_x] = root_y  # Merge the components by making root_y the parent of root_x
+            UF[root_x] = (
+                root_y  # Merge the components by making root_y the parent of root_x
+            )
 
         def bfs(node):
             """Performs a BFS to determine the maximum distance within the connected component
@@ -40,7 +43,7 @@ class Solution:
             q = deque([(node, 1)])  # Initialize queue with start node and its level
             seen = {node: 1}  # Keep track of visited nodes and their level
             max_level = 1  # Maximum level (distance from the starting node)
-            
+
             while q:
                 current, level = q.popleft()
                 max_level = max(max_level, level)  # Update max_level
@@ -60,8 +63,10 @@ class Solution:
             graph[end].append(start)
             union(start, end)  # Construct connected components using union-find
 
-        max_group_distances = defaultdict(int) # key is root node of the connected component, value is max distance within this component
-        
+        max_group_distances = defaultdict(
+            int
+        )  # key is root node of the connected component, value is max distance within this component
+
         # Perform BFS on each node. If no odd cycles, update largest distances of the connected components.
         for i in range(1, n + 1):
             max_dist = bfs(i)

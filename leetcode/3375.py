@@ -3,7 +3,7 @@ class Solution:
         temp = min(nums)
         if temp < k:
             return -1
-        res = len(set(nums)) 
+        res = len(set(nums))
         if temp == k:
             res -= 1
         return res

@@ -1,6 +1,6 @@
 class Solution:
     def minMaxDifference(self, num: int) -> int:
-        
+
         num = str(num)
         target = "9"
         for c in num:

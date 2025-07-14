@@ -4,7 +4,7 @@ class Solution:
 
         res = []
         for i in range(0, n, k):
-            res.append(s[i:i + k])
+            res.append(s[i : i + k])
 
         res[-1] = res[-1] + fill * (k - len(res[-1]))
         return res

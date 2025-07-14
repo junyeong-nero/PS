@@ -1,6 +1,7 @@
 from heapq import heapify, heappop, heappush
 from typing import List
 
+
 class Solution:
     def minimumSize(self, nums: List[int], maxOperations: int) -> int:
         # 이진 탐색 범위: 최소 1, 최대 max(nums)
@@ -25,14 +26,14 @@ class Solution:
 
 # class Solution:
 #     def minimumSize(self, nums: List[int], maxOperations: int) -> int:
-        
+
 #         arr = [-x for x in nums]
 #         heapify(arr)
 
 #         while maxOperations > 0:
 #             tar = -heappop(arr)
 #             print(tar)
-            
+
 #             num = -float('inf')
 #             if len(arr) > 0:
 #                 num = -heappop(arr)

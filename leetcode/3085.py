@@ -1,5 +1,6 @@
 from collections import Counter
 
+
 class Solution:
     def minimumDeletions(self, word: str, k: int) -> int:
         """
@@ -19,7 +20,7 @@ class Solution:
         char_counts = Counter(word)
         frequencies = sorted(list(char_counts.values()))
         n = len(frequencies)
-        min_deletions = float('inf')
+        min_deletions = float("inf")
 
         # Calculate prefix sums for efficient range sum queries
         prefix_sum = [0] * (n + 1)
@@ -39,7 +40,7 @@ class Solution:
                     deletions_right = 0
                     for x in range(j + 1, n):
                         deletions_right += max(0, frequencies[x] - (frequencies[i] + k))
-                    
+
                     min_deletions = min(min_deletions, deletions_left + deletions_right)
-            
-        return min_deletions if min_deletions != float('inf') else 0
+
+        return min_deletions if min_deletions != float("inf") else 0

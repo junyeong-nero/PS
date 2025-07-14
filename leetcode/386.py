@@ -11,9 +11,8 @@ class Solution:
                     value //= 10
                 value += 1
         return res
-    
+
     # [1]
     # [1, 10]
     # [1, 10, 11, 12, 13]
     # [1, 10, 11, 12, 13, 2]
-        

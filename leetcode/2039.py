@@ -1,6 +1,6 @@
 class Solution:
     def networkBecomesIdle(self, edges: List[List[int]], patience: List[int]) -> int:
-        
+
         n = len(patience)
         tree = defaultdict(list)
         for u, v in edges:
@@ -10,7 +10,7 @@ class Solution:
 
         q = deque([(0, 0)])
         visited = [False] * n
-        dist = [float('inf')] * n
+        dist = [float("inf")] * n
 
         while q:
             tar, d = q.popleft()
@@ -30,4 +30,3 @@ class Solution:
             res = max(res, first + count * patience[i] + 1)
 
         return res
-            

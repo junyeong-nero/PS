@@ -1,6 +1,6 @@
 class Solution:
     def minDominoRotations(self, tops: List[int], bottoms: List[int]) -> int:
-        
+
         n = len(tops)
         counter = defaultdict(set)
         for i, v in enumerate(tops):

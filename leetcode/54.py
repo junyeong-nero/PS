@@ -1,6 +1,6 @@
 class Solution:
     def spiralOrder(self, matrix: List[List[int]]) -> List[int]:
-        
+
         m, n = len(matrix), len(matrix[0])
 
         res = [matrix[0][0]]
@@ -16,7 +16,11 @@ class Solution:
             dx, dy = dirs[dirs_index]
             # print(dx, dy)
 
-            while 0 <= x + dx < m and 0 <= y + dy < n and matrix[x + dx][y + dy] is not None:
+            while (
+                0 <= x + dx < m
+                and 0 <= y + dy < n
+                and matrix[x + dx][y + dy] is not None
+            ):
                 res.append(matrix[x + dx][y + dy])
                 count += 1
                 matrix[x + dx][y + dy] = None

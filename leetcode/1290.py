@@ -4,6 +4,7 @@
 #         self.val = val
 #         self.next = next
 
+
 class Solution:
     def getDecimalValue(self, head: Optional[ListNode]) -> int:
         cur = head
@@ -11,5 +12,5 @@ class Solution:
         while cur:
             num = num * 2 + cur.val
             cur = cur.next
-        
+
         return num

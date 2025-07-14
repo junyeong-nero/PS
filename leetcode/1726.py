@@ -1,9 +1,10 @@
 from collections import Counter
 
+
 class Solution:
     def tupleSameProduct(self, nums: List[int]) -> int:
         """
-        Finds the number of tuples (a, b, c, d) such that a * b = c * d, 
+        Finds the number of tuples (a, b, c, d) such that a * b = c * d,
         where a, b, c, and d are distinct elements from nums.
 
         Args:
@@ -25,6 +26,8 @@ class Solution:
             if count >= 2:  # Need at least 2 pairs to form tuples
                 # Number of ways to choose 2 pairs from 'count' pairs
                 num_pair_combinations = count * (count - 1) // 2
-                total_tuples += num_pair_combinations * 8  # Each pair combination gives 8 tuples
+                total_tuples += (
+                    num_pair_combinations * 8
+                )  # Each pair combination gives 8 tuples
 
         return total_tuples
