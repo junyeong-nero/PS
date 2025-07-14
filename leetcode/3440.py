@@ -1,40 +1,29 @@
 class Solution:
     def maxFreeTime(
-        self, eventTime: int, startTime: List[int], endTime: List[int]
+        self, eventTime: int, startTime: list[int], endTime: list[int]
     ) -> int:
-
-        startTime += [eventTime]
-        endTime += [eventTime]
-
         n = len(startTime)
-        last = 0
-
-        blanks = []
-        removable = [False] * n
-
+        q = [False] * n
+        t1 = 0
+        t2 = 0
         for i in range(n):
-            start, end = startTime[i], endTime[i]
-            blanks.append(start - last)
-            last = end
+            if endTime[i] - startTime[i] <= t1:
+                q[i] = True
+            t1 = max(t1, startTime[i] - (0 if i == 0 else endTime[i - 1]))
 
-        print(blanks)
-        # blanks[i] : i-th block 이전의 공백 크기
-
-        for i in range(n):
-            start, end = startTime[i], endTime[i]
-            block_size = end - start
-            for j in range(n):
-                if i <= j <= i + 1:
-                    continue
-                if blanks[j] >= block_size:
-                    removable[i] = True
-                    break
-        print(removable)
+            if endTime[n - i - 1] - startTime[n - i - 1] <= t2:
+                q[n - i - 1] = True
+            t2 = max(
+                t2,
+                (eventTime if i == 0 else startTime[n - i]) - endTime[n - i - 1],
+            )
 
         res = 0
-        for i in range(n - 1):
-            start, end = startTime[i], endTime[i]
-            temp = blanks[i] + blanks[i + 1] + ((end - start) if removable[i] else 0)
-            res = max(res, temp)
-
+        for i in range(n):
+            left = 0 if i == 0 else endTime[i - 1]
+            right = eventTime if i == n - 1 else startTime[i + 1]
+            if q[i]:
+                res = max(res, right - left)
+            else:
+                res = max(res, right - left - (endTime[i] - startTime[i]))
         return res
