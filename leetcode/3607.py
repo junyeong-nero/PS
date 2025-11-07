@@ -1,6 +1,8 @@
 class Solution:
-    def processQueries(self, c: int, connections: List[List[int]], queries: List[List[int]]) -> List[int]:
-        
+    def processQueries(
+        self, c: int, connections: List[List[int]], queries: List[List[int]]
+    ) -> List[int]:
+
         graph = defaultdict(list)
         for u, v in connections:
             graph[u].append(v)
@@ -20,7 +22,7 @@ class Solution:
                 for neighbor in neighbors:
                     if neighbor not in visited:
                         q.append(neighbor)
-            
+
             arr = [node for node in visited if power[node - 1]]
             res = min(arr) if arr else -1
             return res
