@@ -4,17 +4,32 @@ class Solution:
     ) -> int:
         n = len(s)
 
-        def distance(source, target):
-            target = ord(target) - ord("a")
-            source = ord(source) - ord("a")
-            return (target - source + 26) % 26, (source - target + 26) % 26
+        def shift_chars(char, direct):
+            temp = chr(ord(char) + direct)
+            index = ord(char) - ord("a")
+            cost = nextCost[index] if direct == 1 else previousCost[index]
+            if temp < "a":
+                temp = "z"
+            if temp > "z":
+                temp = "a"
+            return temp, cost
 
-        cost = 0
-        for i in range(n):
-            d_next, d_prev = distance(s[i], t[i])
-            cost_next = nextCost[ord(s[i]) - ord("a")] * d_next
-            cost_prev = previousCost[ord(s[i]) - ord("a")] * d_prev
-            print(i, cost_next, cost_prev)
-            cost += min(cost_next, cost_prev)
+        def minimum_cost(index):
+            source, target = s[index], t[index]
 
+            temp = source
+            cost_0 = 0
+            while temp != target:
+                temp, d_cost = shift_chars(temp, 1)
+                cost_0 += d_cost
+
+            temp = source
+            cost_1 = 0
+            while temp != target:
+                temp, d_cost = shift_chars(temp, -1)
+                cost_1 += d_cost
+
+            return min(cost_1, cost_0)
+
+        cost = sum([minimum_cost(i) for i in range(n)])
         return cost
