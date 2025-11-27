@@ -1,37 +1,27 @@
+from typing import List
+
+
 class Solution:
     def maxSubarraySum(self, nums: List[int], k: int) -> int:
+        """
+        Tracks prefix sums per start-index modulo k while sliding the k-length window,
+        so we avoid storing all prefix arrays. Time: O(n), Space: O(k).
+        """
         n = len(nums)
-        cur = sum(nums[:k])
-        arr = [cur]
+        window_sum = sum(nums[:k])
+        total_windows = n - k + 1
 
-        for i in range(n - k):
-            cur -= nums[i]
-            cur += nums[i + k]
-            arr.append(cur)
+        prefix_sum = [0] * k  # cumulative sums for each residue group
+        min_prefix = [0] * k  # minimum prefix seen so far for each group
+        best = float("-inf")
 
-        m = len(arr)
-        prefix = defaultdict(list)
-        for i in range(k):
-            if not prefix[i]:
-                prefix[i].append(0)
-            for j in range(n // k):
-                if i + j * k >= m:
-                    break
-                prefix[i].append(prefix[i][-1] + arr[i + j * k])
+        for idx in range(total_windows):
+            if idx:  # slide window by one
+                window_sum += nums[idx + k - 1] - nums[idx - 1]
 
-        def get_maximum(prefix_arr):
-            res = -float("inf")
-            if len(prefix_arr) <= 1:
-                return res
-            cur_min = prefix_arr[0]
-            for num in prefix_arr[1:]:
-                res = max(res, num - cur_min)
-                cur_min = min(cur_min, num)
-            return res
+            r = idx % k
+            prefix_sum[r] += window_sum
+            best = max(best, prefix_sum[r] - min_prefix[r])
+            min_prefix[r] = min(min_prefix[r], prefix_sum[r])
 
-        # print(prefix)
-
-        temp = [get_maximum(arr) for arr in prefix.values()]
-        # print(temp)
-        res = max(temp)
-        return res
+        return best
