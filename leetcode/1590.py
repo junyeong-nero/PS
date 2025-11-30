@@ -4,8 +4,6 @@ class Solution:
         mod = sum(nums) % p
         if mod == 0:
             return 0
-
-        print(mod)
         # find sum(subarray) % p = mod
 
         prefix = [0]
@@ -13,15 +11,14 @@ class Solution:
             prefix.append(prefix[-1] + num)
 
         res = float("inf")
-        d = defaultdict(list)
+        d = dict()
         for i in range(n + 1):
             temp = prefix[i] % p
             # prefix[i] - prefix[j] = mod
             # prefix[j] = (preifx[i] - mod + p) % p
 
             j = (temp - mod + p) % p
-            if d[j]:
-                res = min(res, i - d[j][-1])
-            d[temp].append(i)
+            res = min(res, i - d.get(j, -float("inf")))
+            d[temp] = i
 
         return -1 if res >= n else res
