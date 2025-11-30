@@ -13,7 +13,7 @@ class Solution:
             prefix.append(prefix[-1] + num)
 
         res = float("inf")
-        d = [[] for _ in range(p)]
+        d = defaultdict(list)
         for i in range(n + 1):
             temp = prefix[i] % p
             # prefix[i] - prefix[j] = mod
