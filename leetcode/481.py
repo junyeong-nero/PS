@@ -1,38 +1,32 @@
 class Solution:
     def magicalString(self, n: int) -> int:
-        # "1" -> "1"
-        def is_magical(s):
-            m = len(s)
-            i = 0
-            converted = ""
-            while i < m:
-                j = i + 1
-                while j < m and s[i] == s[j]:
-                    j += 1
-                converted += str(j - i)
-                i = j
-            return converted == s[: len(converted)]
 
         cur = "1"
-        size = 1
-        res = 1
+        occurence = "1"
 
-        while size < n:
-            if is_magical(cur + "1"):
-                cur += "1"
-                res += 1
-                size += 1
-            elif is_magical(cur + "11"):
-                cur += "11"
-                res += 2
-                size += 2
-            elif is_magical(cur + "2"):
-                cur += "2"
-                size += 1
-            elif is_magical(cur + "22"):
-                cur += "22"
-                size += 2
-            else:
-                return -1
+        def check(cur, occurence, delta):
+            cur += delta
+            occurence += str(len(delta))
+            return occurence[-1] == cur[len(occurence) - 1]
+
+        while len(cur) < n:
+            if cur[-1] == "1":
+                if check(cur, occurence, "2"):
+                    cur += "2"
+                    occurence += "1"
+                    continue
+                if check(cur, occurence, "22"):
+                    cur += "22"
+                    occurence += "2"
+                    continue
+            if cur[-1] == "2":
+                if check(cur, occurence, "1"):
+                    cur += "1"
+                    occurence += "1"
+                    continue
+                if check(cur, occurence, "11"):
+                    cur += "11"
+                    occurence += "2"
+                    continue
 
         return cur[:n].count("1")
