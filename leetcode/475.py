@@ -1,30 +1,23 @@
+import bisect
+
+
 class Solution:
     def findRadius(self, houses: List[int], heaters: List[int]) -> int:
 
-        houses = sorted(houses)
-        heaters = sorted(heaters)
-        n = len(heaters)
+        n = len(houses)
+        m = len(heaters)
 
-        def check(radius):
-            for house in houses:
-                i = bisect_left(heaters, house)
-                j = i - 1
-                if 0 <= i < n and heaters[i] - house <= radius:
-                    continue
-                if 0 <= j < n and house - heaters[j] <= radius:
-                    continue
-                return False
-            return True
+        heaters.sort()
+        ans = 0
 
-        i = 0
-        j = max(houses + heaters)
-
-        while i <= j:
-            mid = (i + j) // 2
-            temp = check(mid)
-            if not temp:
-                i = mid + 1
+        for house in houses:
+            index = bisect.bisect_left(heaters, house)
+            if index == 0:
+                distance = heaters[0] - house
+            elif index == m:
+                distance = house - heaters[-1]
             else:
-                j = mid - 1
+                distance = min(heaters[index] - house, house - heaters[index - 1])
+            ans = max(ans, distance)
 
-        return i
+        return ans
