@@ -1,45 +1,28 @@
 class Solution:
     def repeatedStringMatch(self, a: str, b: str) -> int:
-        if b in a:
-            return 1
+        m, n = len(a), len(b)
 
-        n = len(a)
-        m = len(b)
-        count = b.count(a)
-        if count == 0:
-            for i in range(m):
-                temp = a[-1 - i :] + a[: m - i - 1]
-                if temp == b:
-                    return 2
-            return -1
+        def dfs(idx, count):
+            # print(idx, count)
+            p = len(b[idx:])
 
-        res = count
-        b = "[" + b + "]"
-        arr = [elem for elem in b.split(a) if elem and elem != "[" and elem != "]"]
-        # print(arr)
-        if len(arr) > 2:
-            return -1
+            res = float("inf")
+            if idx == n:
+                return count
+            if idx + m <= n and a == b[idx : idx + m]:
+                return dfs(idx + m, count + 1)
+            if p <= m:
+                temp = (count + 1) if a[:p] == b[idx:] else float("inf")
+                res = min(res, temp)
+            if count == 0:
+                if b in a:
+                    return 1
+                for i in range(m):
+                    tar = a[i:]
+                    # print(tar, b[idx:idx + len(tar)])
+                    if tar == b[idx : idx + len(tar)]:
+                        res = min(res, dfs(idx + len(tar), count + 1))
+            return res
 
-        def check(target, direct):
-            for i in range(n):
-                temp = a[i:] if direct else a[:i]
-                if temp == target:
-                    return True
-            return False
-
-        if len(arr) == 1:
-            target = arr[0]
-            direct = True if target[0] == "[" else False
-            target = target[1:] if direct else target[:-1]
-            if check(target, direct):
-                return res + 1
-            return -1
-
-        if len(arr) == 2:
-            target_left = arr[0][1:]
-            target_right = arr[1][:-1]
-            if check(target_left, True) and check(target_right, False):
-                return res + 2
-            return -1
-
-        return res
+        res = dfs(0, 0)
+        return -1 if res == float("inf") else res
