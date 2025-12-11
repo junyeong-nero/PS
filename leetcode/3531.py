@@ -1,35 +1,20 @@
 class Solution:
     def countCoveredBuildings(self, n: int, buildings: List[List[int]]) -> int:
+        bottom = [n + 1] * (n + 1)  # min col
+        top = [0] * (n + 1)  # max col
+        left = [n + 1] * (n + 1)  # min row
+        right = [0] * (n + 1)  # max row
 
-        x_arr = dict()
-        y_arr = dict()
+        # First pass: compute extremes
+        for x, y in buildings:
+            bottom[x] = min(bottom[x], y)
+            top[x] = max(top[x], y)
+            left[y] = min(left[y], x)
+            right[y] = max(right[y], x)
 
-        for i, (x, y) in enumerate(buildings):
-            if x not in x_arr:
-                x_arr[x] = []
-            if y not in y_arr:
-                y_arr[y] = []
-
-            heappush(x_arr[x], (y, i))
-            heappush(y_arr[y], (x, i))
-
-        def get_candidate(heap):
-            res = []
-            while heap:
-                pos, index = heappop(heap)
-                res.append(index)
-
-            return set(res[1:-1]) if len(res) >= 3 else set()
-
-        x_candidates = set()
-        for heap in x_arr.values():
-            x_candidates |= get_candidate(heap)
-
-        y_candidates = set()
-        for heap in y_arr.values():
-            y_candidates |= get_candidate(heap)
-
-        # print(x_candidates)
-        # print(y_candidates)
-
-        return len(x_candidates & y_candidates)
+        # Second pass: count covered
+        covered = 0
+        for x, y in buildings:
+            if bottom[x] < y < top[x] and left[y] < x < right[y]:
+                covered += 1
+        return covered
