@@ -7,40 +7,108 @@ class Solution:
         hierarchy: List[List[int]],
         budget: int,
     ) -> int:
+        g = [[] for _ in range(n)]
+        for e in hierarchy:
+            g[e[0] - 1].append(e[1] - 1)
 
-        tree = defaultdict(list)
-        for u, v in hierarchy:
-            tree[u].append(v)
+        def dfs(u: int):
+            cost = present[u]
+            dCost = present[u] // 2
 
-        future = [0] + future
-        present = [0] + present
+            # dp[u][state][budget]
+            # state = 0: Do not purchase parent node, state = 1: Must purchase parent node
+            dp0 = [0] * (budget + 1)
+            dp1 = [0] * (budget + 1)
 
-        # @cache
-        def dfs(ID, discount, left_budget):
-            res = 0
-            price = (present[ID] // 2) if discount else present[ID]
-            # print(ID, discount, left_budget, benefit)
+            # subProfit[state][budget]
+            # state = 0: discount not available, state = 1: discount available
+            subProfit0 = [0] * (budget + 1)
+            subProfit1 = [0] * (budget + 1)
+            uSize = cost
 
-            # if purchase
-            if left_budget >= price:
-                left_budget -= price
-                benefit = future[ID] - price
-                for employee in tree[ID]:
-                    benefit += dfs(employee, True, left_budget)
-                res = max(res, benefit)
-                left_budget += price
+            for v in g[u]:
+                child_dp0, child_dp1, vSize = dfs(v)
+                uSize += vSize
+                for i in range(budget, -1, -1):
+                    for sub in range(min(vSize, i) + 1):
+                        if i - sub >= 0:
+                            subProfit0[i] = max(
+                                subProfit0[i],
+                                subProfit0[i - sub] + child_dp0[sub],
+                            )
+                            subProfit1[i] = max(
+                                subProfit1[i],
+                                subProfit1[i - sub] + child_dp1[sub],
+                            )
 
-            # if not purchase
-            for employee in tree[ID]:
-                res = max(res, dfs(employee, False, left_budget))
+            for i in range(budget + 1):
+                dp0[i] = subProfit0[i]
+                dp1[i] = subProfit0[i]
+                if i >= dCost:
+                    dp1[i] = max(
+                        subProfit0[i], subProfit1[i - dCost] + future[u] - dCost
+                    )
+                if i >= cost:
+                    dp0[i] = max(subProfit0[i], subProfit1[i - cost] + future[u] - cost)
 
-            return res
+            return dp0, dp1, uSize
 
-        res = dfs(1, False, budget)
-        return res
+        return dfs(0)[0][budget]
 
 
-# 50 - 6 => 44
-# 48 - 2 = 46
-# 17 - 11 = 6
-# 96
+class Solution:
+    def maxProfit(
+        self,
+        n: int,
+        present: List[int],
+        future: List[int],
+        hierarchy: List[List[int]],
+        budget: int,
+    ) -> int:
+        g = [[] for _ in range(n)]
+        for e in hierarchy:
+            g[e[0] - 1].append(e[1] - 1)
+
+        def dfs(u: int):
+            cost = present[u]
+            dCost = present[u] // 2
+
+            # dp[u][state][budget]
+            # state = 0: Do not purchase parent node, state = 1: Must purchase parent node
+            dp0 = [0] * (budget + 1)
+            dp1 = [0] * (budget + 1)
+
+            # subProfit[state][budget]
+            # state = 0: discount not available, state = 1: discount available
+            subProfit0 = [0] * (budget + 1)
+            subProfit1 = [0] * (budget + 1)
+            uSize = cost
+
+            for v in g[u]:
+                child_dp0, child_dp1, vSize = dfs(v)
+                uSize += vSize
+                for i in range(budget, -1, -1):
+                    for sub in range(min(vSize, i) + 1):
+                        if i - sub >= 0:
+                            subProfit0[i] = max(
+                                subProfit0[i],
+                                subProfit0[i - sub] + child_dp0[sub],
+                            )
+                            subProfit1[i] = max(
+                                subProfit1[i],
+                                subProfit1[i - sub] + child_dp1[sub],
+                            )
+
+            for i in range(budget + 1):
+                dp0[i] = subProfit0[i]
+                dp1[i] = subProfit0[i]
+                if i >= dCost:
+                    dp1[i] = max(
+                        subProfit0[i], subProfit1[i - dCost] + future[u] - dCost
+                    )
+                if i >= cost:
+                    dp0[i] = max(subProfit0[i], subProfit1[i - cost] + future[u] - cost)
+
+            return dp0, dp1, uSize
+
+        return dfs(0)[0][budget]
