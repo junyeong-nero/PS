@@ -3,29 +3,30 @@ class Solution:
 
         n = len(prices)
 
-        def get_benefit(boundary=[-1, -1]):
-            start, end = boundary
+        res = sum([prices[i] * strategy[i] for i in range(n)])
+        new_strategy = strategy[:]
+        for i in range(k):
+            if i < k // 2:
+                new_strategy[i] = 0
+            else:
+                new_strategy[i] = 1
+
+        start, end = 0, k
+        value = sum([prices[i] * new_strategy[i] for i in range(n)])
+        res = max(res, value)
+
+        for i in range(n - k):
             mid = (start + end) // 2
+            value += (strategy[start] - 0) * prices[start]
+            value += (0 - 1) * prices[mid]
+            value += (1 - strategy[end]) * prices[end]
+            res = max(res, value)
 
-            def get_strategy():
-                if i < start or i > end:
-                    return strategy[i]
-                elif i <= mid:
-                    return 0
-                else:
-                    return 1
+            # start : 0 -> original
+            # mid : 1 -> 0
+            # end : orignal -> 1
 
-            res = 0
-            for i in range(n):
-                st = get_strategy()
-                res += prices[i] * st
-
-            return res
-
-        res = get_benefit()
-
-        for i in range(0, n - k + 1):
-            boundary = [i, i + k - 1]
-            res = max(res, get_benefit(boundary))
+            start += 1
+            end += 1
 
         return res
