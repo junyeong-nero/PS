@@ -1,72 +1,57 @@
-class UnionFind:
-    def __init__(self, n):
-        self.parent = list(range(n))
-        self.rank = [0] * n
-
-    def find(self, x):
-        if self.parent[x] != x:
-            self.parent[x] = self.find(self.parent[x])
-        return self.parent[x]
-
-    def union(self, x, y):
-        rootX = self.find(x)
-        rootY = self.find(y)
-
-        if rootX != rootY:
-            if self.rank[rootX] > self.rank[rootY]:
-                self.parent[rootY] = rootX
-                return rootX
-            elif self.rank[rootX] < self.rank[rootY]:
-                self.parent[rootX] = rootY
-                return rootY
-            else:
-                self.parent[rootY] = rootX
-                self.rank[rootX] += 1
-                return rootX
-
-        return rootX
+from collections import defaultdict, deque
+from typing import List
 
 
 class Solution:
     def findAllPeople(
         self, n: int, meetings: List[List[int]], firstPerson: int
     ) -> List[int]:
+        # Sort meetings by time
+        meetings.sort(key=lambda x: x[2])
 
-        graph = defaultdict(list)
-        uf = UnionFind(n)
+        # Set of people who know the secret
+        known = {0, firstPerson}
 
-        def concatenate(arr):
-            uf.__init__(n)
-            roots = defaultdict(set)
-            for u, v in arr:
-                if uf.find(u) == uf.find(v):
-                    continue
+        # Group meetings by time and process
+        i = 0
+        m = len(meetings)
+        while i < m:
+            j = i
+            time = meetings[i][2]
 
-                root = uf.union(u, v)
-                roots[root] |= {u, v}
-            return list(roots.values())
+            # Identify the range of meetings with the same time
+            while j < m and meetings[j][2] == time:
+                j += 1
 
-        for u, v, time in meetings:
-            graph[time].append([u, v])
+            # meetings[i:j] are all happening at 'time'
+            current_batch = meetings[i:j]
 
-        for time in graph:
-            graph[time] = concatenate(graph[time])
+            # Build graph for this batch
+            adj = defaultdict(list)
+            people_in_batch = set()
 
-        times = sorted(graph.keys())
-        # print(graph)
-        # print(times)
+            for u, v, w in current_batch:
+                adj[u].append(v)
+                adj[v].append(u)
+                people_in_batch.add(u)
+                people_in_batch.add(v)
 
-        secret = [False] * n
-        secret[0] = True
-        secret[firstPerson] = True
+            # Find starting points for BFS (people who already know the secret)
+            queue = deque()
+            for p in people_in_batch:
+                if p in known:
+                    queue.append(p)
 
-        for time in times:
-            for group in graph[time]:
-                know_secret = any([secret[i] for i in group])
-                if not know_secret:
-                    continue
-                for i in group:
-                    secret[i] = True
+            # BFS to propagate secret within this time group
+            visited = set(queue)
+            while queue:
+                curr = queue.popleft()
+                for neighbor in adj[curr]:
+                    if neighbor not in known:
+                        known.add(neighbor)
+                        queue.append(neighbor)
+                        visited.add(neighbor)
 
-        res = [i for i in range(n) if secret[i]]
-        return res
+            i = j  # Move to next batch
+
+        return sorted(list(known))
