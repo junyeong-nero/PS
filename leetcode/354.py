@@ -1,22 +1,24 @@
+import bisect
+
+
 class Solution:
     def maxEnvelopes(self, envelopes: List[List[int]]) -> int:
         if not envelopes:
             return 0
 
-        # 1. 가로 길이 기준 오름차순 정렬
-        envelopes.sort()
-        n = len(envelopes)
+        # 가로(w)는 오름차순, 가로가 같으면 세로(h)는 내림차순 정렬
+        envelopes.sort(key=lambda x: (x[0], -x[1]))
 
-        # 2. dp[i]: i번째 봉투를 가장 바깥으로 했을 때 최대 개수
-        dp = [1] * n
+        # 세로(h) 값들에 대해서만 LIS 구하기
+        heights = [envelopes[i][1] for i in range(len(envelopes))]
 
-        for i in range(n):
-            for j in range(i):
-                # i번째 봉투가 j번째 봉투를 담을 수 있는지 확인
-                if (
-                    envelopes[j][0] < envelopes[i][0]
-                    and envelopes[j][1] < envelopes[i][1]
-                ):
-                    dp[i] = max(dp[i], dp[j] + 1)
+        # LIS를 위한 tails (이진 탐색 활용)
+        tails = []
+        for h in heights:
+            idx = bisect.bisect_left(tails, h)
+            if idx == len(tails):
+                tails.append(h)
+            else:
+                tails[idx] = h
 
-        return max(dp)
+        return len(tails)
