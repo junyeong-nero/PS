@@ -1,35 +1,22 @@
 class Solution:
     def reachNumber(self, target: int) -> int:
+        target = abs(target)
+        step = total = 0
 
-        bound = abs(target) * 2
+        while total < target:
+            step += 1
+            total += step
 
-        def in_boundary(num):
-            return -bound < num < bound
+        # 결국 step 이 늘어지만, target 을 넘어선 이후로
+        # 이전의 steps 중에서 일부를 flipping 하여 해결할 수 있다.
+        # 하지만 flipping 하게 되면 원래 수에서 elem * 2 만큼 변화가 일어나기 때문에
+        # 차이가 1 인 경우에는 새로운 step을 추가해서 처리해야 한다.
 
-        def bfs(cur=0):
-            q = deque([(cur, 0)])
-            while q:
-                tar, step = q.popleft()
-                if tar == target:
-                    return step - 1
-                if in_boundary(tar + step):
-                    q.append((tar + step, step + 1))
-                if in_boundary(tar - step):
-                    q.append((tar - step, step + 1))
+        # 11 = 1 - 2 + 3 + 4 + 5
+        # 9  = 1 + 2 + 3 + 4 - 5 + 6
 
-            return -1
+        while (total - target) % 2 != 0:
+            step += 1
+            total += step
 
-        # @cache
-        # def dfs(cur=0, steps=1):
-        #     if not (-bound < cur < bound):
-        #         return float("inf")
-        #     if cur == target:
-        #         return 0
-
-        #     res = float("inf")
-        #     res = min(res, 1 + dfs(cur + steps, steps + 1))
-        #     res = min(res, 1 + dfs(cur - steps, steps + 1))
-        #     return res
-
-        temp = bfs()
-        return temp
+        return step
