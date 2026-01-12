@@ -1,49 +1,51 @@
+import re
+
+
 class Solution:
     def solveEquation(self, equation: str) -> str:
+        # Split equation into Left Hand Side (lhs) and Right Hand Side (rhs)
+        lhs, rhs = equation.split("=")
 
-        def convert(term):
-            if term[0] not in "+-":
-                term = "+" + term
+        def evaluate(expression: str) -> tuple[int, int]:
+            """Parses the expression and returns (coefficient_of_x, constant_sum)."""
+            tokens = re.findall(r"[+-]?\d*x?", expression)
+            x_coeff = 0
+            constant_sum = 0
 
-            res = [0, 0]
-            n = len(term)
-            i = 0
+            for token in tokens:
+                if not token:
+                    continue  # Skip empty matches caused by regex
 
-            while i < n:
-
-                op = term[i]
-                j = i + 1
-                while j < n and term[j] not in "+-":
-                    j += 1
-                temp = term[i + 1 : j]
-
-                check = 0 if "x" in temp else 1
-                if temp == "x":
-                    temp = 1
+                if "x" in token:
+                    # Handle cases like "x", "-x", "+x", "2x", "-3x"
+                    if token == "x" or token == "+x":
+                        val = 1
+                    elif token == "-x":
+                        val = -1
+                    else:
+                        val = int(token.replace("x", ""))
+                    x_coeff += val
                 else:
-                    temp = int(temp.replace("x", ""))
+                    # Handle constants like "5", "-3", "+2"
+                    constant_sum += int(token)
 
-                if op == "+":
-                    res[check] += temp
-                else:
-                    res[check] -= temp
+            return x_coeff, constant_sum
 
-                i = j
+        # Calculate coefficients for both sides
+        l_x, l_const = evaluate(lhs)
+        r_x, r_const = evaluate(rhs)
 
-            return res
+        # Simplify to form: ax = b
+        # a = l_x - r_x
+        # b = r_const - l_const
+        a = l_x - r_x
+        b = r_const - l_const
 
-        right, left = equation.split("=")
-        right, left = convert(right), convert(left)
-        print(right, left)
-
-        def solve(right, left):
-
-            if right[0] == left[0]:
-                if right[1] == left[1]:
-                    return "Infinite solutions"
+        # Check for edge cases
+        if a == 0:
+            if b == 0:
+                return "Infinite solutions"
+            else:
                 return "No solution"
 
-            res = (left[1] - right[1]) // (right[0] - left[0])
-            return f"x={res}"
-
-        return solve(right, left)
+        return f"x={b // a}"
