@@ -1,62 +1,42 @@
+from typing import List
+from collections import Counter
+
+
 class Solution:
     def minimumOperations(self, grid: List[List[int]]) -> int:
-
         m, n = len(grid), len(grid[0])
-        columns = [[grid[i][j] for i in range(m)] for j in range(n)]
-        columns_counter = [Counter(column) for column in columns]
 
-        def check_row(row):
-            prev, prev_idx = -1, 0
-            errors = []
-            for idx, elem in enumerate(row):
-                if elem == prev:
-                    if not errors or errors[-1] != prev_idx:
-                        errors.append(prev_idx)
-                    errors.append(idx)
-                prev, prev_idx = elem, idx
+        # 1. 각 열(column)별로 숫자(0~9)의 빈도수를 미리 계산합니다.
+        # col_counts[j][num] = j번째 열에 있는 숫자 num의 개수
+        col_counts = [[0] * 10 for _ in range(n)]
+        for row in grid:
+            for j, val in enumerate(row):
+                col_counts[j][val] += 1
 
-            # 011011
+        # 2. DP 테이블 초기화
+        # dp[j][num] = j번째 열을 num으로 채웠을 때의 최소 조작 횟수
+        # 초기값은 무한대로 설정
+        dp = [[float("inf")] * 10 for _ in range(n)]
 
-            return check_cost(row, check_error_count(errors))
+        # 3. 첫 번째 열(0번 컬럼) 초기화
+        for num in range(10):
+            # 비용 = 전체 행 개수 - 해당 숫자의 빈도수
+            dp[0][num] = m - col_counts[0][num]
 
-        def check_error_count(errors):
-            i = 0
-            res = 0
-            print(errors)
-            while i < len(errors):
-                j = i
-                while j + 1 < len(errors) and errors[j + 1] - errors[j] == 1:
-                    j += 1
-                res += (j - i + 1) // 2
-                i = j + 1
-            return res
+        # 4. DP 진행 (1번 컬럼부터 마지막 컬럼까지)
+        for j in range(1, n):
+            for current_num in range(10):  # 현재 열을 current_num으로 칠할 때
+                cost = m - col_counts[j][current_num]
 
-        def func(column_counter, target):
-            for key, freq in column_counter.most_common():
-                if key == target:
-                    continue
-                return freq
-            return 0
+                # 이전 열(j-1)의 가능한 모든 숫자(prev_num)를 확인
+                for prev_num in range(10):
+                    if current_num == prev_num:
+                        continue  # 인접한 열은 같은 숫자일 수 없음
 
-        def check_cost(row, errors=0):
-            print(row, errors)
-            res = []
-            for i in range(n):
-                value = row[i]
-                res.append((columns_counter[i][value], func(columns_counter[i], value)))
-                # columns_counter[i]
+                    # 이전 상태 중 최소값을 현재 비용에 더함
+                    dp[j][current_num] = min(
+                        dp[j][current_num], dp[j - 1][prev_num] + cost
+                    )
 
-            res = sorted(res, key=lambda x: x[0] - x[1])
-            print(res)
-            # errors * m -> column 을 모두 바꾸는게 아니라
-            # most frequency elements 기준으로 바꿔야 한다.
-            return (
-                m * n
-                - sum([elem[0] for elem in res[errors:]])
-                - sum([elem[1] for elem in res[:errors]])
-            )
-
-        temp = [check_row(row) for row in grid]
-        print(temp)
-
-        return min(temp)
+        # 5. 마지막 열에서의 최소값이 정답
+        return min(dp[n - 1])
