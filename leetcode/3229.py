@@ -1,81 +1,49 @@
+from typing import List
+
+
 class Solution:
     def minimumOperations(self, nums: List[int], target: List[int]) -> int:
-        # compare in prefix array
-
-        # [3, 5, 1, 2] -> [0, 3, 8, 9, 11]
-        # [4, 6, 2, 4] -> [0, 4, 10, 12, 16]
-
-        # 1. calculate diff = [1, 2, 3, 5]
-        # 2. increase [0 ... 3] = 1, then filled with [1, 2, 3, 4]
-        # 3. increase [3 ... 3] = 1 then filled with [0, 0, 0, 1]
-
-        # [3, 5, 1, 2] -> [0, 3, 8, 9, 11]
-        # [1, 2, 3, 4] -> [0, 1, 3, 6, 10]
-
-        # diff = [-2, -5, -3, -1]
-        # 1. decrease [0 ... 1] = 2 , [-1, -2, -2, -2] * 2
-        #       [0, -1, 1, 3]
-        # 3. decrease [1 ... 3] = 1, [0, -1, -2, 0]
-        #       [0, 0, -1, 0]
-        # 4. decrease [2 ... 2] = 1 [0, 0, -1, 0]
-        #       [0, 0, 0, 0]
-
-        # total = 5
-
-        # [3, 5, 1, 2] -> [4, 6, 2, 4]
-        # diff : [1, 1, 1, 3]
-
-        # [3, 5, 1, 2] -> [1, 2, 3, 4]
-        # diff : [-2, -3, 1, 2]
-        # find index j start from [0 : j]
-        # if diff[i] - delta is close to 0, then use it! or break
-
-        # its greedy approach -> failed
-        # always minimize abs(first index)
-        # but its not optimal...
-
-        def func(diff, index):
-            delta = diff[index]
-            diff[index] = 0
-
-            j = index + 1
-            while j < n:
-                if abs(diff[j]) > abs(diff[j] - delta):
-                    diff[j] -= delta
-                    j += 1
-                else:
-                    break
-
-            j = index - 1
-            while j >= 0:
-                if abs(diff[j]) > abs(diff[j] - delta):
-                    diff[j] -= delta
-                    j -= 1
-                else:
-                    break
-
-            return diff, abs(delta)
-
         n = len(nums)
-        diff = [target[i] - nums[i] for i in range(n)]
-        print(diff)
+        # incr: 이전 인덱스에서 이어져 온 '증가' 연산의 양
+        # decr: 이전 인덱스에서 이어져 온 '감소' 연산의 양 (음수 값으로 유지)
+        # ops: 총 연산 횟수
+        incr = decr = ops = 0
 
-        res = 0
+        for i in range(n):
+            # 목표값과 현재값의 차이 (양수면 증가 필요, 음수면 감소 필요)
+            diff = target[i] - nums[i]
 
-        indices = sorted(list(range(0, n)), key=abs)
+            if diff > 0:
+                # 1. 양수 차이 (증가시켜야 하는 경우)
 
-        # O(N)
-        for i in indices:
-            if diff[i] == 0:
-                continue
-            diff, count = func(diff, i)
-            res += count
-            print(diff)
+                # 이전 단계의 증가량(incr)보다 현재 필요한 증가량(diff)이 더 크다면,
+                # 그 차이만큼 새로운 연산을 추가해야 함.
+                # (예: 이전에 +2만큼 올리고 있었는데, 여기선 +5가 필요하면 +3만큼 더 올려야 함)
+                if incr < diff:
+                    ops += diff - incr
 
-        # need a breakthrought!
-        # remove left or remove right?
-        # optimal index for removing?
+                # 현재의 차이를 다음 인덱스를 위한 '증가량'으로 업데이트
+                incr = diff
+                # 부호가 바뀌었으므로 감소량(decr)은 초기화
+                decr = 0
 
-        # [0, 3, -1, -9, 3, 1, 5, 3, 4, 2]
+            elif diff < 0:
+                # 2. 음수 차이 (감소시켜야 하는 경우)
 
-        return res
+                # 이전 단계의 감소량(decr)보다 현재 필요한 감소량(diff)이 더 작다면(더 큰 음수라면),
+                # 더 많이 깎아야 하므로 그 차이만큼 연산 추가.
+                # (예: 이전에 -2였는데, 여기선 -5가 필요하면 3만큼 더 깎는 연산 필요)
+                if diff < decr:
+                    ops += decr - diff
+
+                # 현재의 차이를 다음 인덱스를 위한 '감소량'으로 업데이트
+                decr = diff
+                # 부호가 바뀌었으므로 증가량(incr)은 초기화
+                incr = 0
+
+            else:
+                # 3. 차이가 0인 경우 (이미 목표값과 같음)
+                # 연속된 연산이 끊기므로 둘 다 초기화
+                incr = decr = 0
+
+        return ops
